@@ -91,7 +91,30 @@ const _settings = {
   // debug flags:
   debugDisplayLandmarks: false,
   debugMeshMaterial: false,
-  debugOccluder: false
+  debugOccluder: false,
+  
+  // watch colors
+  watchColors: {
+    'gold': {
+      metalColor: 0xffd700,
+      metalness: 1,
+      roughness: 0.3,
+      envMapIntensity: 2
+    },
+    'red': {
+      metalColor: 0x722f37,
+      metalness: 0.7,
+      roughness: 0.4,
+      envMapIntensity: 1
+    },
+    'black': {
+      metalColor: 0x000000,
+      metalness: 0.8,
+      roughness: 0.2,
+      envMapIntensity: 1.5
+    }
+  },
+  currentWatchColor: 'gold', // 預設顏色
 };
 
 
@@ -302,5 +325,20 @@ function callbackTrack(detectState){
   }
 }
 
+// 新增顏色切換函數
+function changeWatchColor(color) {
+  if (_settings.watchColors[color]) {
+    _settings.currentWatchColor = color;
+    
+    // 更新按鈕選中狀態
+    document.querySelectorAll('.color-button').forEach(button => {
+      button.classList.remove('active');
+    });
+    document.getElementById(color).classList.add('active');
+  }
+}
+
+// 將 changeWatchColor 函數添加到 window 對象，使其可以從 HTML 中調用
+window.changeWatchColor = changeWatchColor;
 
 window.addEventListener('load', main);
