@@ -68,7 +68,7 @@ const _settings = {
   isPoseFilter: false,//true,
   
   // soft occluder parameters (soft because we apply a fading gradient)
-  occluderRadiusRange: [4, 4.7], // first value: minimum or interior radius of the occluder (full transparency).
+  occluderRadiusRange: [4, 4.7], // first value: minimum or interior radius of the  (full transparency).
                                  // second value: maximum or exterior radius of the occluder (full opacity, no occluding effect)
   occluderHeight: 48, // height of the cylinder
   occluderOffset: [0,0,0], // relative to the wrist 3D model
@@ -83,7 +83,9 @@ const _settings = {
   },
 
   // model settings:
-  modelURL: 'assets/watchCasio.glb',
+  modelURL: 'assets/watchDw_gold.glb',
+  //modelURL: 'assets/watchDw_red.glb',
+  //modelURL: 'assets/watchDw_black.glb',
   //modelOffset: [0.076, -0.916, -0.504],
   
   modelQuaternion: [0,0,0,1], // Format: X,Y,Z,W (and not W,X,Y,Z like Blender)
@@ -93,28 +95,13 @@ const _settings = {
   debugMeshMaterial: false,
   debugOccluder: false,
   
-  // watch colors
-  watchColors: {
-    'gold': {
-      metalColor: 0xffd700,
-      metalness: 1,
-      roughness: 0.3,
-      envMapIntensity: 2
-    },
-    'red': {
-      metalColor: 0x722f37,
-      metalness: 0.7,
-      roughness: 0.4,
-      envMapIntensity: 1
-    },
-    'black': {
-      metalColor: 0x000000,
-      metalness: 0.8,
-      roughness: 0.2,
-      envMapIntensity: 1.5
-    }
+  // watch models mapping
+  watchModels: {
+    'gold': 'assets/watchDw_gold.glb',
+    'red': 'assets/watchDw_red.glb',
+    'black': 'assets/watchDw_black.glb'
   },
-  currentWatchColor: 'gold', // 預設顏色
+  currentWatchColor: 'gold' // 預設款式
 };
 
 
@@ -128,6 +115,8 @@ const _states = {
 let _state = _states.notLoaded;
 let _isInstructionsHidden = false;
 
+// 將 three 對象設為全局變量
+let threeStuff = null;
 
 function setFullScreen(cv){
   const pixelRatio = window.devicePixelRatio || 1;
@@ -256,6 +245,9 @@ function load_model(threeLoadingManager){
 
 function start(three){
   VTOCanvas.style.zIndex = 3; // fix a weird bug on iOS15 / safari
+  
+  // 保存 three 對象以供後續使用
+  threeStuff = three;
 
   setup_lighting(three);
 
@@ -325,16 +317,24 @@ function callbackTrack(detectState){
   }
 }
 
-// 新增顏色切換函數
+// 修改為切換模型的函數
 function changeWatchColor(color) {
-  if (_settings.watchColors[color]) {
-    _settings.currentWatchColor = color;
+  if (_settings.watchModels[color] && threeStuff) {
+    console.log('changeWatchColor: ' + color + ' -> ' + _settings.watchModels[color]);
+    
+    // 更新模型URL
+    _settings.modelURL = _settings.watchModels[color];
+    
+    // 重新載入模型
+    load_model(threeStuff.loadingManager);
     
     // 更新按鈕選中狀態
     document.querySelectorAll('.color-button').forEach(button => {
       button.classList.remove('active');
     });
     document.getElementById(color).classList.add('active');
+    
+    _settings.currentWatchColor = color;
   }
 }
 
