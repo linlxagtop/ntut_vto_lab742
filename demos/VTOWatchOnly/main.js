@@ -138,6 +138,15 @@ function main(){
   setFullScreen(handTrackerCanvas);
   setFullScreen(VTOCanvas);
 
+  // 檢查URL參數並控制影片播放器
+  const urlParams = new URLSearchParams(window.location.search);
+  const videoId = urlParams.get('v');
+  const videoPlayer = document.getElementById('videoPlayer');
+  
+  if (videoId === '0001') {
+    videoPlayer.style.display = 'block';
+  }
+
   // init change VTO button:
   ChangeCameraHelper.init({
     canvases: [handTrackerCanvas, VTOCanvas],
@@ -309,10 +318,28 @@ function change_camera(){
 }
 
 
+let _isVideoStarted = false;
+
 function callbackTrack(detectState){
   if (detectState.isDetected) {
     if (!_isInstructionsHidden){
       hide_instructions();
+    }
+    
+    // 檢查是否有影片需要播放
+    const urlParams = new URLSearchParams(window.location.search);
+    const videoId = urlParams.get('v');
+    const videoPlayer = document.getElementById('videoPlayer');
+    
+    if (videoId === '0001' && !_isVideoStarted && _state === _states.running) {
+      _isVideoStarted = true;
+      videoPlayer.style.display = 'block';
+      // 延遲一秒後播放，確保3D模型已完全載入
+      setTimeout(() => {
+        videoPlayer.play().catch(error => {
+          console.log('Video autoplay failed:', error);
+        });
+      }, 1000);
     }
   }
 }

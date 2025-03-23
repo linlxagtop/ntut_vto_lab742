@@ -64,6 +64,19 @@
         transform: translate(-50%, 0%) rotateY(180deg);
       }
 
+      /* 影片播放器樣式 */
+      #videoPlayer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 33.33vw;
+        height: 50vh;
+        z-index: 4;
+        display: none;
+        background: #000;
+        object-fit: contain;
+      }
+
       .modal {
         display: flex; 
         flex-direction: column;
@@ -219,6 +232,12 @@
       <!-- Canvas used by the hand tracker and displaying the video -->
       <canvas id='handTrackerCanvas'></canvas>
     </div>
+
+    <!-- 影片播放器 -->
+    <video id="videoPlayer" controls>
+      <source src="assets/0001.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
 
     <!-- 顏色選擇按鈕 -->
     <div class="color-buttons">
