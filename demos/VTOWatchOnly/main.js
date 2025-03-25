@@ -129,6 +129,7 @@ function setFullScreen(cv){
 
 // entry point:
 function main(){
+  handleUrlParameters();
   _state = _states.loading;
 
   // get canvases and size them:
@@ -137,15 +138,6 @@ function main(){
   
   setFullScreen(handTrackerCanvas);
   setFullScreen(VTOCanvas);
-
-  // 檢查URL參數並控制影片播放器
-  const urlParams = new URLSearchParams(window.location.search);
-  const videoId = urlParams.get('v');
-  const videoPlayer = document.getElementById('videoPlayer');
-  
-  if (videoId === '0001') {
-    videoPlayer.style.display = 'block';
-  }
 
   // init change VTO button:
   ChangeCameraHelper.init({
@@ -367,5 +359,65 @@ function changeWatchColor(color) {
 
 // 將 changeWatchColor 函數添加到 window 對象，使其可以從 HTML 中調用
 window.changeWatchColor = changeWatchColor;
+
+// URL參數處理函數
+function handleUrlParameters() {
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  // 處理版本參數 v
+  const vParam = urlParams.get('v');
+  if (vParam) {
+    _settings.videoSettings = {
+      facingMode: 'environment',
+      idealWidth: parseInt(vParam)
+    };
+  }
+
+  // 處理跑馬燈參數 c
+  const cParam = urlParams.get('c');
+  if (cParam === '0001') {
+    fetch('0001.json')
+      .then(response => response.json())
+      .then(data => {
+        const scrollingText = document.getElementById('scrollingText');
+        if (scrollingText && data.comments) {
+          scrollingText.style.display = 'block';
+          updateMarqueeText(data.comments);
+        }
+      })
+      .catch(error => console.error('Error loading messages:', error));
+  }
+}
+
+// 更新跑馬燈文字
+function updateMarqueeText(messages) {
+  const marquee = document.querySelector('.marquee');
+  if (!marquee || !messages || messages.length === 0) return;
+
+  let currentIndex = 0;
+  const animationDuration = 1000; // 動畫持續時間（毫秒）
+  const displayDuration = 3000; // 顯示時間（毫秒）
+  
+  function showNextMessage() {
+    // 移除動畫class以重置動畫
+    marquee.classList.remove('animate');
+    
+    // 設定新的文字
+    marquee.textContent = messages[currentIndex];
+    currentIndex = (currentIndex + 1) % messages.length;
+    
+    // 強制重繪
+    void marquee.offsetWidth;
+    
+    // 添加動畫class
+    marquee.classList.add('animate');
+  }
+
+  // 立即顯示第一條消息
+  showNextMessage();
+
+  // 定時切換消息
+  setInterval(showNextMessage, animationDuration + displayDuration);
+}
 
 window.addEventListener('load', main);

@@ -128,16 +128,9 @@
       }
 
       #changeCamera {
-        display: none;
         position: fixed;
-        z-index: 4;
-        bottom: 6px;
-        left: 6px;
-        background-color: rgba(0,0,0,0.5);
-        color: white;
-        font-variant: small-caps;
-        border: none;
-        padding: 12px;
+        bottom: 20px;
+        right: 20px;
       }
 
       /* 顏色選擇按鈕容器 */
@@ -206,9 +199,60 @@
         background: linear-gradient(145deg, #333333, #000000);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       }
+
+      /* 跑馬燈樣式 */
+      #scrollingText {
+        color: #fff;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 10px;
+        margin: 10px auto;
+        border-radius: 5px;
+        display: none;
+        position: fixed;
+        bottom: 120px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        max-width: 600px;
+        text-align: center;
+        z-index: 99;
+        overflow: hidden;
+        height: 1.5em;
+      }
+      .marquee {
+        display: block;
+        animation: none;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+      .marquee.animate {
+        opacity: 1;
+        animation: scrollUp 1s ease-out;
+      }
+      @keyframes scrollUp {
+        0% {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+        20% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
     </style>
   </head>
   <body>
+
+    <div id='canvases'>
+      <!-- Canvas displayed above, with the THREE.js scene -->
+      <canvas id='VTOCanvas'></canvas>
+
+      <!-- Canvas used by the hand tracker and displaying the video -->
+      <canvas id='handTrackerCanvas'></canvas>
+    </div>
 
     <!-- loading modal: -->
     <div id='loading' class='modal'>
@@ -226,19 +270,16 @@
       </div>
     </div>
 
-    <div id='canvases'>
-      <!-- Canvas displayed above, with the THREE.js scene -->
-      <canvas id='VTOCanvas'></canvas>
-
-      <!-- Canvas used by the hand tracker and displaying the video -->
-      <canvas id='handTrackerCanvas'></canvas>
-    </div>
-
     <!-- 影片播放器 -->
     <video id="videoPlayer" controls>
       <source src="assets/0001.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
+
+    <!-- 跑馬燈文字 -->
+    <div id="scrollingText">
+      <div class="marquee"></div>
+    </div>
 
     <!-- 顏色選擇按鈕 -->
     <div class="color-buttons">
