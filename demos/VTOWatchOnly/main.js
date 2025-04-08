@@ -323,7 +323,7 @@ function callbackTrack(detectState){
     const videoId = urlParams.get('v');
     const videoPlayer = document.getElementById('videoPlayer');
     
-    if (videoId === '0001' && !_isVideoStarted && _state === _states.running) {
+    if (videoId && !_isVideoStarted && _state === _states.running) {
       _isVideoStarted = true;
       videoPlayer.style.display = 'block';
       // 延遲一秒後播放，確保3D模型已完全載入
@@ -364,19 +364,37 @@ window.changeWatchColor = changeWatchColor;
 function handleUrlParameters() {
   const urlParams = new URLSearchParams(window.location.search);
   
-  // 處理版本參數 v
-  const vParam = urlParams.get('v');
-  if (vParam) {
-    _settings.videoSettings = {
-      facingMode: 'environment',
-      idealWidth: parseInt(vParam)
-    };
+  // 處理影片參數 v
+  const videoId = urlParams.get('v');
+  const videoPlayer = document.getElementById('videoPlayer');
+  if (videoId && videoPlayer) {
+    videoPlayer.src = `assets/${videoId}.mp4`;
+    videoPlayer.load();
+  }
+  else if (videoPlayer) {
+    videoPlayer.src = `assets/0001.mp4`;
+    videoPlayer.load();
+  }
+  else{
+    console.error('Video player not found');
   }
 
   // 處理跑馬燈參數 c
-  const cParam = urlParams.get('c');
-  if (cParam === '0001') {
-    fetch('0001.json')
+  const commentId = urlParams.get('c');
+  if (commentId) {
+    fetch(`assets/${commentId}.json`)
+      .then(response => response.json())
+      .then(data => {
+        const scrollingText = document.getElementById('scrollingText');
+        if (scrollingText && data.comments) {
+          scrollingText.style.display = 'block';
+          updateMarqueeText(data.comments);
+        }
+      })
+      .catch(error => console.error('Error loading messages:', error));
+  }
+  else{
+    fetch(`assets/0001.json`)
       .then(response => response.json())
       .then(data => {
         const scrollingText = document.getElementById('scrollingText');
