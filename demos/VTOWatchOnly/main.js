@@ -368,11 +368,11 @@ function handleUrlParameters() {
   const videoId = urlParams.get('v');
   const videoPlayer = document.getElementById('videoPlayer');
   if (videoId && videoPlayer) {
-    videoPlayer.src = `video.zeabur.internal/${videoId}.mp4`;
+    videoPlayer.src = `https://video.zeabur.app/${videoId}.mp4`;
     videoPlayer.load();
   }
   else if (videoPlayer) {
-    videoPlayer.src = `video.zeabur.internal/Welcome_High.mp4`;
+    videoPlayer.src = `https://video.zeabur.app/Welcome_High.mp4`;
     videoPlayer.load();
   }
   else{
