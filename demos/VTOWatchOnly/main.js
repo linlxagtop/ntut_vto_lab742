@@ -1,3 +1,6 @@
+// 用於存儲當前選擇的模型集合（正常或低解析度）
+let currentModelSet = null;
+
 const _settings = {
   threshold: 0.95, // detection sensitivity, between 0 and 1
   
@@ -344,31 +347,33 @@ function callbackTrack(detectState){
   }
 }
 
+// 設置活動按鈕
+function setActiveButton(clickedButton) {
+  // 移除所有按鈕的 active 類
+  document.querySelectorAll('.color-button').forEach(button => {
+    button.classList.remove('active');
+  });
+  // 為點擊的按鈕添加 active 類
+  clickedButton.classList.add('active');
+}
+
 // 修改為切換模型的函數
 function changeWatchColor(color) {
-  // 檢查URL參數是否有res=low
-  const urlParams = new URLSearchParams(window.location.search);
-  const resolution = urlParams.get('res');
-  
-  // 根據resolution參數選擇使用哪個模型集合
-  const modelsToUse = (resolution === 'low') ? _settings.watchModelsLow : _settings.watchModels;
-  
-  if (modelsToUse[color] && threeStuff) {
-    console.log('changeWatchColor: ' + color + ' -> ' + modelsToUse[color]);
+  // 使用在handleUrlParameters中設置的模型集合
+  if (currentModelSet[color] && threeStuff) {
+    console.log('changeWatchColor: ' + color + ' -> ' + currentModelSet[color]);
     
     // 更新模型URL
-    _settings.modelURL = modelsToUse[color];
+    _settings.modelURL = currentModelSet[color];
     
     // 重新載入模型
     load_model(threeStuff.loadingManager);
     
-    // 更新按鈕選中狀態
-    document.querySelectorAll('.color-button').forEach(button => {
-      button.classList.remove('active');
-    });
-    document.getElementById(color).classList.add('active');
-    
+    // 更新當前顏色
     _settings.currentWatchColor = color;
+    
+    // 更新按鈕狀態
+    setActiveButton(document.getElementById(color));
   }
 }
 
@@ -393,6 +398,17 @@ function handleUrlParameters() {
   else{
     console.error('Video player not found');
   }
+  
+  // 處理3D模型解析度參數 res
+  const resolution = urlParams.get('res');
+  // 根據resolution參數選擇使用哪個模型集合
+  currentModelSet = (resolution === 'low') ? _settings.watchModelsLow : _settings.watchModels;
+  _settings.modelScale = (resolution === 'low') ? 3.5 : 1.3 * 1.462;
+  
+  // 更新初始模型URL為相應解析度的模型
+  _settings.modelURL = currentModelSet[_settings.currentWatchColor];
+  console.log('Initial model URL set to:', _settings.modelURL);
+  console.log('Using model set:', resolution === 'low' ? 'low resolution' : 'high resolution');
 
   // 處理跑馬燈參數 c
   const commentId = urlParams.get('c');

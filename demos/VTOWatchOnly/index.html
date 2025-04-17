@@ -289,17 +289,5 @@
     </div>
 
     <button onclick='change_camera()' id='changeCamera'>Change camera</button>
-
-    <script>
-      // 設置活動按鈕
-      function setActiveButton(clickedButton) {
-        // 移除所有按鈕的 active 類
-        document.querySelectorAll('.color-button').forEach(button => {
-          button.classList.remove('active');
-        });
-        // 為點擊的按鈕添加 active 類
-        clickedButton.classList.add('active');
-      }
-    </script>
   </body>
 </html>
