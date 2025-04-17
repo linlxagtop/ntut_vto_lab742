@@ -381,29 +381,24 @@ function handleUrlParameters() {
 
   // 處理跑馬燈參數 c
   const commentId = urlParams.get('c');
+  const scrollingText = document.getElementById('scrollingText');
+  
   if (commentId) {
+    // 有 c 參數時，顯示跑馬燈
     fetch(`assets/${commentId}.json`)
       .then(response => response.json())
       .then(data => {
-        const scrollingText = document.getElementById('scrollingText');
         if (scrollingText && data.comments) {
           scrollingText.style.display = 'block';
           updateMarqueeText(data.comments);
         }
       })
       .catch(error => console.error('Error loading messages:', error));
-  }
-  else{
-    fetch(`assets/0001.json`)
-      .then(response => response.json())
-      .then(data => {
-        const scrollingText = document.getElementById('scrollingText');
-        if (scrollingText && data.comments) {
-          scrollingText.style.display = 'block';
-          updateMarqueeText(data.comments);
-        }
-      })
-      .catch(error => console.error('Error loading messages:', error));
+  } else {
+    // 無 c 參數時，隱藏跑馬燈
+    if (scrollingText) {
+      scrollingText.style.display = 'none';
+    }
   }
 }
 
