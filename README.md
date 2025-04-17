@@ -13,7 +13,7 @@
 
 This is a research project focused on Virtual Try-On (VTO) and avatar experimentation at National Taipei University of Technology (NTUT). The project explores augmented reality applications for virtual try-on experiences and avatar interactions.
 
-## Virtual Try-on and object manipulation
+## Virtual Try-on ,object manipulation and 3D Model
 
 * Hand VTO:
   * Wrist and ring VTO: [live demo](https://webar.rocks/demos/hand/demos/VTO/), [source code](/demos/VTO/)
@@ -24,6 +24,9 @@ This is a research project focused on Virtual Try-On (VTO) and avatar experiment
   * Velociraptor demo: [live demo](https://webar.rocks/demos/hand/demos/objectManip2/), [source code](/demos/objectManip2)
   * Cute ghost demo: [live demo](https://webar.rocks/demos/hand/demos/objectManip3/), [source code](/demos/objectManip3)
   * Velociraptor demo with persistency if hand tracking is lost: [live demo](https://webar.rocks/demos/hand/demos/objectManip4/), [source code](/demos/objectManip4)
+
+* 3D Model:
+  * Watch: [live demo](https://ntut_vto_lab742.zeabur.app/demos/VTOWatchOnly/index.html), [source code](/dev/model3D/watchDw/)
 
 ## Hosting
 

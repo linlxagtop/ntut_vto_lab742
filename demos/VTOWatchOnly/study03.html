@@ -68,12 +68,20 @@
     function startExperiment() {
       const pages = [
         "index.html?v=Welcome_High",
-        "index.html?v=Welcome_Low",
+        "index.html?v=Welcome_Low&res=low",
         "ad01.html",
         "ad02.html"
       ];
       const randomIndex = Math.floor(Math.random() * pages.length);
+  
       const selectedPage = pages[randomIndex];
+  
+      window.location.href = selectedPage;
+  
+    }
+  </script>
+</body>
+</html>
       window.location.href = selectedPage;
     }
   </script>

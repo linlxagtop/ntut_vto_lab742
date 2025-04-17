@@ -86,6 +86,9 @@ const _settings = {
   modelURL: 'assets/watchDw_gold.glb',
   //modelURL: 'assets/watchDw_red.glb',
   //modelURL: 'assets/watchDw_black.glb',
+  //modelURL: 'assets/watchDw_gold_low.glb',
+  //modelURL: 'assets/watchDw_red_low.glb',
+  //modelURL: 'assets/watchDw_black_low.glb',
   //modelOffset: [0.076, -0.916, -0.504],
   
   modelQuaternion: [0,0,0,1], // Format: X,Y,Z,W (and not W,X,Y,Z like Blender)
@@ -100,6 +103,11 @@ const _settings = {
     'gold': 'assets/watchDw_gold.glb',
     'red': 'assets/watchDw_red.glb',
     'black': 'assets/watchDw_black.glb'
+  },
+  watchModelsLow: {
+    'gold': 'assets/watchDw_gold_low.glb',
+    'red': 'assets/watchDw_red_low.glb',
+    'black': 'assets/watchDw_black_low.glb'
   },
   currentWatchColor: 'gold' // 預設款式
 };
@@ -338,11 +346,18 @@ function callbackTrack(detectState){
 
 // 修改為切換模型的函數
 function changeWatchColor(color) {
-  if (_settings.watchModels[color] && threeStuff) {
-    console.log('changeWatchColor: ' + color + ' -> ' + _settings.watchModels[color]);
+  // 檢查URL參數是否有res=low
+  const urlParams = new URLSearchParams(window.location.search);
+  const resolution = urlParams.get('res');
+  
+  // 根據resolution參數選擇使用哪個模型集合
+  const modelsToUse = (resolution === 'low') ? _settings.watchModelsLow : _settings.watchModels;
+  
+  if (modelsToUse[color] && threeStuff) {
+    console.log('changeWatchColor: ' + color + ' -> ' + modelsToUse[color]);
     
     // 更新模型URL
-    _settings.modelURL = _settings.watchModels[color];
+    _settings.modelURL = modelsToUse[color];
     
     // 重新載入模型
     load_model(threeStuff.loadingManager);
