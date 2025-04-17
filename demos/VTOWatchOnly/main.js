@@ -36,7 +36,7 @@ const _settings = {
    'wristBackMiddleThumb'
    ],
   modelOffset: [-0.3*0, 0, -0.504*0], // bring pinky side, up
-  modelScale: 1.2 * 1.462,
+  modelScale: 1.3 * 1.462,
   NNsPaths: ['../../neuralNets/NN_WRISTBACK_42.json'],
   objectPointsPositionFactors: [1.0, 1.0, 1.0], //*/
 
