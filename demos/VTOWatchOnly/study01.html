@@ -61,14 +61,14 @@
       請您觀看完廣告之後，依照您最真實的感受，<br>
       接續填寫問卷。
     </p>
-    <button class="start-btn" onclick="startExperiment()">開始實驗</button>
+    <button class="start-btn" onclick="startExperiment()">繼續</button>
   </div>
 
   <script>
     function startExperiment() {
       const pages = [
-        "index.html?c=0001",
-        "ad01.html"
+        "study01_story01.html",
+        "study01_story02.html"
       ];
       const randomIndex = Math.floor(Math.random() * pages.length);
       const selectedPage = pages[randomIndex];
