@@ -54,10 +54,9 @@
 </head>
 <body>
   <div class="container">
-    <h1>實驗流程說明</h1>
+    <h1>情境</h1>
     <p style="text-align: left;">
-      連續了將近一個禮拜的雨天，原本計畫好要在這個假日去實體店面購買面試要用的手錶，若是陰雨綿綿那還好，但是現在外頭實在雷雨交加，一出門肯定全身溼透的，可是手錶這禮拜在不買就來不及了。<br>
-你嘆了一口氣攤在沙發，拿起手邊的行動裝置，打開品牌購物網站，打算嘗試線上購物的方式挑選心儀的手錶。一進到網站中你就看到了前陣子最心動的款式，你毫不猶豫地點進首頁的廣告連結中…<br>
+      假設您本次購買是為了尋找一個有美觀設計、時尚感等的手錶。<br>
     </p>
     <button class="start-btn" onclick="startExperiment()">開始實驗</button>
   </div>
@@ -65,8 +64,8 @@
   <script>
     function startExperiment() {
       const pages = [
-        "index.html?c=0001",
-        "ad01.html"
+        "../vto01.html?g=hed",
+        "ad_h.html"
       ];
       const randomIndex = Math.floor(Math.random() * pages.length);
       const selectedPage = pages[randomIndex];

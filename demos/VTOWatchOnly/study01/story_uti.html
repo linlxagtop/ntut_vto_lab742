@@ -54,21 +54,18 @@
 </head>
 <body>
   <div class="container">
-    <h1>實驗流程說明</h1>
+    <h1>情境</h1>
     <p style="text-align: left;">
-      尊敬的品牌顧客您好，非常感謝您的光臨，<br>
-      現在您將進入到手錶廣告購物情境當中，<br>
-      請您觀看完廣告之後，依照您最真實的感受，<br>
-      接續填寫問卷。
+      假設您本次購買是為了尋找一個實用、耐用、性價比高的手錶。<br/>
     </p>
-    <button class="start-btn" onclick="startExperiment()">繼續</button>
+    <button class="start-btn" onclick="startExperiment()">開始實驗</button>
   </div>
 
   <script>
     function startExperiment() {
       const pages = [
-        "study01_story01.html",
-        "study01_story02.html"
+        "../vto01.html?g=uti",
+        "ad_h.html"
       ];
       const randomIndex = Math.floor(Math.random() * pages.length);
       const selectedPage = pages[randomIndex];

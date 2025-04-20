@@ -2,25 +2,10 @@
 let currentModelSet = null;
 
 const _settings = {
+  marqueeState: null,
   threshold: 0.95, // detection sensitivity, between 0 and 1
   
   // pose computation and stabilization:
-  
-  /*poseLandmarksLabels: [
-    // for NN 40:
-    'wristPinkySideBot',
-    'wristThumbSideBot',
-    'wristPinkySideTop',
-    'wristThumbSideTop',
-    'wristUpTop',
-    'wristUpBot',
-    'wristDownTop',
-    'wristDownBot'
-   ],
-  modelOffset: [-0.3*0, 0, -0.504*0], // bring pinky side, up
-  modelScale: 1.2 * 1.462,
-  NNsPaths: ['../../neuralNets/NN_WRISTBACK_40.json'],
-  objectPointsPositionFactors: [1.0, 1.0, 1.0], //*/
 
   poseLandmarksLabels: [
     // for NN 41, 42:
@@ -40,34 +25,6 @@ const _settings = {
   NNsPaths: ['../../neuralNets/NN_WRISTBACK_42.json'],
   objectPointsPositionFactors: [1.0, 1.0, 1.0], //*/
 
-  /*poseLandmarksLabels: [
-    // for NN version <= 33 or >=37:
-    "wristBack", "wristLeft", "wristRight", "wristPalm", "wristPalmTop", "wristBackTop", "wristRightBottom", "wristLeftBottom" // more accurate
-    //"wristBack", "wristRight", "wristPalm", "wristPalmTop", "wristBackTop", "wristLeft" // more stable
-    //"wristBack", "wristRight", "wristPalm", "wristLeftBottom", "wristRightBottom", "wristLeft"
-   ],
-  NNsPaths: ['../../neuralNets/NN_WRISTBACK_38.json'], // best: 38
-  modelOffset: [-0.3, 0.5, -0.504], // bring pinky side, up
-  modelScale: 1.3 * 1.462,
-  objectPointsPositionFactors: [1.0, 1.1, 1.0], // factors to apply to point positions to lower pose angles - dirty tweak */
-      // if objectPointsPositionFactors.y too small -> jitters when displayed front. If too large -> scale down too much when wrist rotates
-
-  /*poseLandmarksLabels: [
-    // for NN 34,35,36:
-    'wristPinkySideBot',
-    'wristThumbSideBot',
-    'wristPinkySideTop',
-    'wristThumbSideTop',
-    'wristUpTop',
-    'wristUpBot',
-    'wristDownTop',
-    'wristDownBot'
-   ],
-  NNsPaths: ['../../neuralNets/NN_WRISTBACK_36.json'],
-  modelOffset: [-0.3, 0.5, -0.504], // bring pinky side, up
-  modelScale: 1.3 * 1.462,
-  objectPointsPositionFactors: [1.0, 1.0, 1.0], // factors to apply to point positions to lower pose angles - dirty tweak
-  //*/
   isPoseFilter: false,//true,
   
   // soft occluder parameters (soft because we apply a fading gradient)
@@ -115,6 +72,21 @@ const _settings = {
   currentWatchColor: 'gold' // 預設款式
 };
 
+// Marquee JSON Data
+const marqueeData = {
+  'study01': {
+    'uti': {
+      'black': 'study01/study01_uti_black.json',
+      'gold': 'study01/study01_uti_gold.json',
+      'red': 'study01/study01_uti_red.json'
+    },
+    'hed': {
+      'black': 'study01/study01_hed_black.json',
+      'gold': 'study01/study01_hed_gold.json',
+      'red': 'study01/study01_hed_red.json'
+    }
+  }
+}
 
 const _states = {
   notLoaded: -1,
@@ -322,27 +294,55 @@ function change_camera(){
 
 
 let _isVideoStarted = false;
+let _isMarqueeShown = false;
 
 function callbackTrack(detectState){
   if (detectState.isDetected) {
     if (!_isInstructionsHidden){
       hide_instructions();
     }
-    
-    // 檢查是否有影片需要播放
+    // 影片播放處理
     const urlParams = new URLSearchParams(window.location.search);
     const videoId = urlParams.get('v');
     const videoPlayer = document.getElementById('videoPlayer');
-    
     if (videoId && !_isVideoStarted && _state === _states.running) {
       _isVideoStarted = true;
       videoPlayer.style.display = 'block';
-      // 延遲一秒後播放，確保3D模型已完全載入
       setTimeout(() => {
         videoPlayer.play().catch(error => {
           console.log('Video autoplay failed:', error);
         });
       }, 1000);
+    }
+    // 跑馬燈顯示處理（只在第一次觸發時載入內容）
+    const scrollingText = document.getElementById('scrollingText');
+    if (_settings.marqueeState) {
+      if (!_isMarqueeShown) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const gParam = urlParams.get('g');
+        const color = _settings.currentWatchColor || 'gold';
+        // 內容根據 g 參數與目前顏色
+        if (gParam && marqueeData['study01'] && marqueeData['study01'][gParam] && marqueeData['study01'][gParam][color]) {
+          const jsonPath = marqueeData['study01'][gParam][color];
+          fetch(jsonPath)
+            .then(response => response.json())
+            .then(data => {
+              if (scrollingText && data.comments) {
+                scrollingText.style.display = 'block';
+                updateMarqueeText(data.comments);
+                _isMarqueeShown = true;
+              }
+            })
+            .catch(error => console.error('Error loading messages:', error));
+        } else {
+          // 若無對應資料則隱藏跑馬燈
+          if (scrollingText) scrollingText.style.display = 'none';
+          _isMarqueeShown = true;
+        }
+      }
+    } else {
+      if (scrollingText) scrollingText.style.display = 'none';
+      _isMarqueeShown = false;
     }
   }
 }
@@ -374,6 +374,28 @@ function changeWatchColor(color) {
     
     // 更新按鈕狀態
     setActiveButton(document.getElementById(color));
+  }
+  // 處理跑馬燈顯示
+  // 取得網址 g 參數
+  const urlParams = new URLSearchParams(window.location.search);
+  const gParam = urlParams.get('g'); // 例如 'uti' 或 'hed'
+  // 若 g 參數與 color 都存在於 marqueeData 中
+  if (gParam && marqueeData['study01'] && marqueeData['study01'][gParam] && marqueeData['study01'][gParam][color]) {
+    const jsonPath = marqueeData['study01'][gParam][color];
+    const scrollingText = document.getElementById('scrollingText');
+    fetch(jsonPath)
+      .then(response => response.json())
+      .then(data => {
+        if (scrollingText && data.comments) {
+          scrollingText.style.display = 'block';
+          updateMarqueeText(data.comments);
+        }
+      })
+      .catch(error => console.error('Error loading messages:', error));
+  } else {
+    // 若無對應資料則隱藏跑馬燈
+    const scrollingText = document.getElementById('scrollingText');
+    if (scrollingText) scrollingText.style.display = 'none';
   }
 }
 
@@ -412,31 +434,22 @@ function handleUrlParameters() {
 
   // 處理跑馬燈參數 c
   const commentId = urlParams.get('c');
-  const scrollingText = document.getElementById('scrollingText');
-  
-  if (commentId) {
-    // 有 c 參數時，顯示跑馬燈
-    fetch(`assets/${commentId}.json`)
-      .then(response => response.json())
-      .then(data => {
-        if (scrollingText && data.comments) {
-          scrollingText.style.display = 'block';
-          updateMarqueeText(data.comments);
-        }
-      })
-      .catch(error => console.error('Error loading messages:', error));
-  } else {
-    // 無 c 參數時，隱藏跑馬燈
-    if (scrollingText) {
-      scrollingText.style.display = 'none';
-    }
-  }
+  _settings.marqueeState = commentId ? commentId : null;
 }
 
 // 更新跑馬燈文字
+// 跑馬燈定時器全域變數
+window.marqueeIntervalId = window.marqueeIntervalId || null;
+
 function updateMarqueeText(messages) {
-  const marquee = document.querySelector('.marquee');
+  const marquee = document.getElementById('scrollingText');
   if (!marquee || !messages || messages.length === 0) return;
+
+  // 清除前一個定時器
+  if (window.marqueeIntervalId) {
+    clearInterval(window.marqueeIntervalId);
+    window.marqueeIntervalId = null;
+  }
 
   let currentIndex = 0;
   const animationDuration = 1000; // 動畫持續時間（毫秒）
@@ -461,7 +474,7 @@ function updateMarqueeText(messages) {
   showNextMessage();
 
   // 定時切換消息
-  setInterval(showNextMessage, animationDuration + displayDuration);
+  window.marqueeIntervalId = setInterval(showNextMessage, animationDuration + displayDuration);
 }
 
 window.addEventListener('load', main);

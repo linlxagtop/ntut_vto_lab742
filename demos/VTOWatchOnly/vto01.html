@@ -37,6 +37,64 @@
     <script src="./main.js"></script>
 
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+    <!-- Material Icons & Material Button CSS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+      .mui-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #1976d2;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        padding: 12px 24px;
+        font-size: 1rem;
+        font-family: 'Roboto', sans-serif;
+        box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
+        cursor: pointer;
+        transition: background 0.2s, box-shadow 0.2s;
+        position: fixed;
+        top: 24px;
+        left: 24px;
+        z-index: 1000;
+      }
+      .mui-btn:hover {
+        background: #1565c0;
+        box-shadow: 0 4px 8px rgba(25, 118, 210, 0.3);
+      }
+      .mui-btn .material-icons {
+        font-size: 1.3em;
+      }
+      /* Survey Button Style from ad_h.html */
+      .survey-button {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        padding: 15px 25px;
+        background: linear-gradient(135deg, #4285f4, #0d47a1);
+        color: white;
+        font-weight: 600;
+        font-size: 16px;
+        border-radius: 30px;
+        text-decoration: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        z-index: 1000;
+      }
+      .survey-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+      }
+      @media (max-width: 768px) {
+        .survey-button {
+          padding: 12px 18px;
+          font-size: 15px;
+          bottom: 18px;
+          right: 18px;
+        }
+      }
+    </style>
 
 
     <style type='text/css'>
@@ -127,10 +185,9 @@
         max-width: 50vw;
       }
 
+      /* #changeCamera 样式由 .mui-btn 覆蓋，保留以防其他依赖 */
       #changeCamera {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
+        z-index: 1000;
       }
 
       /* 顏色選擇按鈕容器 */
@@ -216,8 +273,13 @@
         max-width: 600px;
         text-align: center;
         z-index: 99;
-        overflow: hidden;
-        height: 1.5em;
+        /* 允許多行換行與自動高度 */
+        white-space: pre-line;
+        word-break: break-all;
+        height: auto;
+        min-height: 1.5em;
+        line-height: 1.5;
+        overflow: visible;
       }
       .marquee {
         display: block;
@@ -288,6 +350,12 @@
       <button id="black" class="color-button" onclick="changeWatchColor('black')"></button>
     </div>
 
-    <button onclick='change_camera()' id='changeCamera'>Change camera</button>
+    <!-- Material UI style Change Camera button -->
+    <button onclick="change_camera()" id="changeCamera" class="mui-btn">
+      <span class="material-icons">flip_camera_android</span>
+      切換鏡頭
+    </button>
+    <!-- Survey Button (仿 ad_h.html) -->
+    <a href="https://forms.gle/yYfmFiMMSeSCvUXp9" class="survey-button" target="_blank">前往填寫問卷</a>
   </body>
 </html>

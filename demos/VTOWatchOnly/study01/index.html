@@ -56,17 +56,16 @@
   <div class="container">
     <h1>實驗流程說明</h1>
     <p style="text-align: left;">
-      敬愛的顧客您好，歡迎光臨DW線上廣告網站，開始後您只需要點擊您喜歡的手錶顏色即可試戴手錶並觀看手錶的詳細介紹。<br/><br/>
-      情境：假設您本次購買是為了尋找一個實用、耐用、性價比高的手錶。<br/>
+      敬愛的顧客您好，歡迎光臨DW線上廣告網站，開始後您只需要點擊您喜歡的手錶顏色即可試戴手錶並觀看手錶的詳細介紹。<br>
     </p>
-    <button class="start-btn" onclick="startExperiment()">開始實驗</button>
+    <button class="start-btn" onclick="startExperiment()">繼續</button>
   </div>
 
   <script>
     function startExperiment() {
       const pages = [
-        "index.html?c=0001",
-        "ad01.html"
+        "story_hed.html",
+        "story_uti.html"
       ];
       const randomIndex = Math.floor(Math.random() * pages.length);
       const selectedPage = pages[randomIndex];
