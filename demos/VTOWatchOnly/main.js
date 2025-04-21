@@ -208,14 +208,27 @@ function load_model(threeLoadingManager){
     if (_settings.modelScale){
       me.scale.multiplyScalar(_settings.modelScale);
     }
+    
+    // 根據相機模式調整模型方向
     if (_settings.modelOffset){
       const d = _settings.modelOffset;
-      const displacement = new THREE.Vector3(d[0], d[2], -d[1]); // inverse Y and Z
+      // 前置鏡頭和後置鏡頭使用不同的 X 軸偏移
+      // 在前置鏡頭模式下，X 軸需要鏡像翻轉
+      const xOffset = _isSelfieCamera ? d[0] : -d[0];
+      const displacement = new THREE.Vector3(xOffset, d[2], -d[1]); // inverse Y and Z
       me.position.add(displacement);
     }
+    
     if (_settings.modelQuaternion){
       const q = _settings.modelQuaternion;
-      me.quaternion.set(q[0], q[2], -q[1], q[3]);
+      // 根據相機模式調整旋轉
+      // 在前置鏡頭和後置鏡頭模式下使用不同的旋轉
+      if (_isSelfieCamera) {
+        me.quaternion.set(q[0], q[2], -q[1], q[3]);
+      } else {
+        // 在後置鏡頭模式下翻轉 Y 軸旋轉
+        me.quaternion.set(-q[0], q[2], -q[1], q[3]);
+      }
     }
 
     // add to the tracker:
@@ -288,10 +301,22 @@ function hide_instructions(){
 }
 
 
-function change_camera(){
-  ChangeCameraHelper.change_camera();
-}
+// 跟踪相機是否為前置鏡頭（selfie mode）
+let _isSelfieCamera = true;
 
+function change_camera(){
+  ChangeCameraHelper.change_camera().then(function(isSelfieMode) {
+    // 更新相機狀態
+    _isSelfieCamera = isSelfieMode;
+    
+    // 重新載入模型以調整方向
+    if (threeStuff && threeStuff.loadingManager) {
+      load_model(threeStuff.loadingManager);
+    }
+  }).catch(function(err) {
+    console.error('切換相機失敗:', err);
+  });
+}
 
 let _isVideoStarted = false;
 let _isMarqueeShown = false;
