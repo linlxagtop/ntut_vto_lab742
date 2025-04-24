@@ -404,9 +404,11 @@ function changeWatchColor(color) {
   // 取得網址 g 參數
   const urlParams = new URLSearchParams(window.location.search);
   const gParam = urlParams.get('g'); // 例如 'uti' 或 'hed'
+  // 使用當前研究版本 (從handleUrlParameters中獲取)
+  const currentStudy = _settings.currentStudy || 'study01';
   // 若 g 參數與 color 都存在於 marqueeData 中
-  if (gParam && marqueeData['study01'] && marqueeData['study01'][gParam] && marqueeData['study01'][gParam][color]) {
-    const jsonPath = marqueeData['study01'][gParam][color];
+  if (gParam && marqueeData[currentStudy] && marqueeData[currentStudy][gParam] && marqueeData[currentStudy][gParam][color]) {
+    const jsonPath = marqueeData[currentStudy][gParam][color];
     const scrollingText = document.getElementById('scrollingText');
     fetch(jsonPath)
       .then(response => response.json())
@@ -460,6 +462,22 @@ function handleUrlParameters() {
   // 處理跑馬燈參數 c
   const commentId = urlParams.get('c');
   _settings.marqueeState = commentId ? commentId : null;
+  
+  // 處理研究版本參數 s
+  const studyParam = urlParams.get('s');
+  // 設定研究版本 (從study01到study04)
+  if (studyParam === '1') {
+    _settings.currentStudy = 'study01';
+  } else if (studyParam === '2') {
+    _settings.currentStudy = 'study02';
+  } else if (studyParam === '3') {
+    _settings.currentStudy = 'study03';
+  } else if (studyParam === '4') {
+    _settings.currentStudy = 'study04';
+  } else {
+    _settings.currentStudy = 'study01'; // 預設使用study01
+  }
+  console.log('Using study version:', _settings.currentStudy);
 }
 
 // 更新跑馬燈文字
