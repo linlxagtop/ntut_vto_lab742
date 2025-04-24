@@ -284,6 +284,13 @@ function hide_loading(){
   // Check if the loading element exists before trying to access its properties
   if (domLoading) {
     domLoading.style.opacity = 0;
+    
+    // Show the changeCamera wrapper when loading is complete
+    const changeCameraWrapper = document.getElementById('changeCameraWrapper');
+    if (changeCameraWrapper) {
+      changeCameraWrapper.style.display = 'block';
+    }
+    
     setTimeout(function(){
       // Check again in case it was removed during the timeout
       if (domLoading.parentNode) {
@@ -327,12 +334,21 @@ function change_camera(){
 let _isVideoStarted = false;
 let _isMarqueeShown = false;
 let _isWatchDescriptionShown = false;
+let _isCountdownStarted = false;
+let _countdownInterval = null;
 
 function callbackTrack(detectState){
   if (detectState.isDetected) {
     if (!_isInstructionsHidden){
       hide_instructions();
     }
+    
+    // 啟動倒數計時器（只在第一次偵測到手時啟動）
+    if (!_isCountdownStarted) {
+      startCountdownTimer();
+      _isCountdownStarted = true;
+    }
+    
     // 影片播放處理
     const urlParams = new URLSearchParams(window.location.search);
     const videoId = urlParams.get('v');
@@ -599,6 +615,55 @@ function loadWatchDescription(studyVersion, gParam, color) {
       }
       _settings.currentWatchDescription = null;
     });
+}
+
+// 倒數計時器功能
+function startCountdownTimer() {
+  // 取得需要控制的元素
+  const countdownEl = document.getElementById('countdownTimer');
+  const changeCameraWrapper = document.getElementById('changeCameraWrapper');
+  const videoPlayer = document.getElementById('videoPlayer');
+  const scrollingText = document.getElementById('scrollingText');
+  const descriptionContainer = document.querySelector('.description-buttons-container');
+  const surveyButtonWrapper = document.getElementById('surveyButtonWrapper');
+  
+  // 顯示計時器
+  if (countdownEl) {
+    countdownEl.style.display = 'block';
+  }
+  
+  // 設定初始時間（60秒）
+  let timeLeft = 60;
+  
+  // 每秒更新計時器
+  _countdownInterval = setInterval(function() {
+    timeLeft--;
+    
+    // 格式化時間為 MM:SS
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    const formattedTime = `實驗時間 ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    // 更新計時器顯示
+    if (countdownEl) {
+      countdownEl.textContent = formattedTime;
+    }
+    
+    // 時間結束時
+    if (timeLeft <= 0) {
+      clearInterval(_countdownInterval);
+      
+      // 隱藏元素
+      if (changeCameraWrapper) changeCameraWrapper.style.display = 'none';
+      if (videoPlayer) videoPlayer.style.display = 'none';
+      if (scrollingText) scrollingText.style.display = 'none';
+      if (descriptionContainer) descriptionContainer.style.display = 'none';
+      if (countdownEl) countdownEl.style.display = 'none';
+      
+      // 顯示問卷按鈕
+      if (surveyButtonWrapper) surveyButtonWrapper.style.display = 'block';
+    }
+  }, 1000);
 }
 
 window.addEventListener('load', main);
