@@ -281,10 +281,16 @@ function add_softOccluder(){
 function hide_loading(){
   // remove loading:
   const domLoading = document.getElementById('loading');
-  domLoading.style.opacity = 0;
-  setTimeout(function(){
-    domLoading.parentNode.removeChild(domLoading);
-  }, 800);
+  // Check if the loading element exists before trying to access its properties
+  if (domLoading) {
+    domLoading.style.opacity = 0;
+    setTimeout(function(){
+      // Check again in case it was removed during the timeout
+      if (domLoading.parentNode) {
+        domLoading.parentNode.removeChild(domLoading);
+      }
+    }, 800);
+  }
 }
 
 
