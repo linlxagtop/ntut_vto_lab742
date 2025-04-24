@@ -320,6 +320,7 @@ function change_camera(){
 
 let _isVideoStarted = false;
 let _isMarqueeShown = false;
+let _isWatchDescriptionShown = false;
 
 function callbackTrack(detectState){
   if (detectState.isDetected) {
@@ -339,6 +340,23 @@ function callbackTrack(detectState){
         });
       }, 1000);
     }
+    
+    // 手錶描述顯示處理（只在第一次觸發時顯示）
+    if (!_isWatchDescriptionShown && _settings.currentWatchDescription) {
+      const watchDescription = document.getElementById('watchDescription');
+      const descriptionContainer = document.querySelector('.description-buttons-container');
+      if (watchDescription) {
+        watchDescription.style.display = 'block';
+        // 確保容器也顯示
+        if (descriptionContainer) {
+          descriptionContainer.style.display = 'block';
+        }
+        // 確保 gold 按鈕預設被選中
+        setActiveButton(document.getElementById('gold'));
+        _isWatchDescriptionShown = true;
+      }
+    }
+    
     // 跑馬燈顯示處理（只在第一次觸發時載入內容）
     const scrollingText = document.getElementById('scrollingText');
     if (_settings.marqueeState) {
@@ -384,10 +402,8 @@ function setActiveButton(clickedButton) {
 
 // 修改為切換模型的函數
 function changeWatchColor(color) {
-  // 使用在handleUrlParameters中設置的模型集合
-  if (currentModelSet[color] && threeStuff) {
-    console.log('changeWatchColor: ' + color + ' -> ' + currentModelSet[color]);
-    
+  // 確保選擇的顏色存在於模型集合中
+  if (currentModelSet && currentModelSet[color]) {
     // 更新模型URL
     _settings.modelURL = currentModelSet[color];
     
@@ -400,12 +416,13 @@ function changeWatchColor(color) {
     // 更新按鈕狀態
     setActiveButton(document.getElementById(color));
   }
-  // 處理跑馬燈顯示
+  
   // 取得網址 g 參數
   const urlParams = new URLSearchParams(window.location.search);
   const gParam = urlParams.get('g'); // 例如 'uti' 或 'hed'
   // 使用當前研究版本 (從handleUrlParameters中獲取)
   const currentStudy = _settings.currentStudy || 'study01';
+  
   // 若 g 參數與 color 都存在於 marqueeData 中
   if (gParam && marqueeData[currentStudy] && marqueeData[currentStudy][gParam] && marqueeData[currentStudy][gParam][color]) {
     const jsonPath = marqueeData[currentStudy][gParam][color];
@@ -424,6 +441,9 @@ function changeWatchColor(color) {
     const scrollingText = document.getElementById('scrollingText');
     if (scrollingText) scrollingText.style.display = 'none';
   }
+  
+  // 載入手錶描述
+  loadWatchDescription(currentStudy, gParam, color);
 }
 
 // 將 changeWatchColor 函數添加到 window 對象，使其可以從 HTML 中調用
@@ -478,6 +498,12 @@ function handleUrlParameters() {
     _settings.currentStudy = 'study01'; // 預設使用study01
   }
   console.log('Using study version:', _settings.currentStudy);
+  
+  // 載入初始手錶描述
+  const gParam = urlParams.get('g'); // 例如 'uti' 或 'hed'
+  if (gParam) {
+    loadWatchDescription(_settings.currentStudy, gParam, _settings.currentWatchColor);
+  }
 }
 
 // 更新跑馬燈文字
@@ -518,6 +544,55 @@ function updateMarqueeText(messages) {
 
   // 定時切換消息
   window.marqueeIntervalId = setInterval(showNextMessage, animationDuration + displayDuration);
+}
+
+// 更新手錶描述文字
+function updateWatchDescription(description) {
+  const descriptionElement = document.getElementById('watchDescription');
+  const scrollingContent = descriptionElement ? descriptionElement.querySelector('.scrolling-content') : null;
+  if (!descriptionElement || !scrollingContent || !description) return;
+  
+  // 設定新的描述文字
+  scrollingContent.textContent = description;
+  
+  // 重置動畫
+  scrollingContent.style.animation = 'none';
+  void scrollingContent.offsetWidth; // 強制重繪
+  scrollingContent.style.animation = '';
+}
+
+// 載入手錶描述的函數
+function loadWatchDescription(studyVersion, gParam, color) {
+  if (!studyVersion || !gParam || !color) return;
+  
+  const introJsonPath = `${studyVersion}/${studyVersion}_intro.json`;
+  
+  fetch(introJsonPath)
+    .then(response => response.json())
+    .then(data => {
+      if (data && data[gParam] && data[gParam][color]) {
+        const description = data[gParam][color];
+        updateWatchDescription(description);
+        // 儲存描述到設置中，供後續顯示用
+        _settings.currentWatchDescription = description;
+      } else {
+        // 若無對應資料則隱藏描述
+        const descriptionElement = document.getElementById('watchDescription');
+        if (descriptionElement) {
+          descriptionElement.style.display = 'none';
+        }
+        _settings.currentWatchDescription = null;
+      }
+    })
+    .catch(error => {
+      console.error('Error loading watch description:', error);
+      // 發生錯誤時隱藏描述
+      const descriptionElement = document.getElementById('watchDescription');
+      if (descriptionElement) {
+        descriptionElement.style.display = 'none';
+      }
+      _settings.currentWatchDescription = null;
+    });
 }
 
 window.addEventListener('load', main);

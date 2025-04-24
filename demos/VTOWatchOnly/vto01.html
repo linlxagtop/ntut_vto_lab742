@@ -192,17 +192,10 @@
 
       /* 顏色選擇按鈕容器 */
       .color-buttons {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
         display: flex;
+        justify-content: center;
         gap: 15px;
         z-index: 100;
-        padding: 10px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 20px;
-        backdrop-filter: blur(5px);
       }
 
       /* 顏色按鈕樣式 */
@@ -266,7 +259,7 @@
         border-radius: 5px;
         display: none;
         position: fixed;
-        bottom: 120px;
+        bottom: 160px;
         left: 50%;
         transform: translateX(-50%);
         width: 80%;
@@ -280,6 +273,57 @@
         min-height: 1.5em;
         line-height: 1.5;
         overflow: visible;
+      }
+      
+      /* 組合式描述與按鈕容器 */
+      .description-buttons-container {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        max-width: 600px;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 20px;
+        padding: 15px;
+        backdrop-filter: blur(5px);
+        z-index: 98;
+        display: none; /* 預設隱藏整個容器 */
+      }
+      
+      /* 手錶描述樣式 */
+      #watchDescription {
+        color: #fff;
+        padding: 5px 0;
+        margin-bottom: 10px;
+        width: 100%;
+        font-size: 14px;
+        line-height: 1.6;
+        height: 1.6em;
+        white-space: nowrap;
+        overflow-x: hidden;
+        display: none; /* 預設隱藏 */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      
+      /* 手錶描述水平滑動動畫 - 從右到左，立即開始 */
+      @keyframes textScrollRightToLeft {
+        0% {
+          transform: translateX(0); /* 一開始就顯示在可見範圍內 */
+        }
+        10% { /* 停留一段時間方便閱讀 */
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
+      }
+      
+      #watchDescription .scrolling-content {
+        display: inline-block;
+        white-space: nowrap;
+        animation: textScrollRightToLeft 30s linear infinite; /* 動畫時間增加一倍，速度減慢一半 */
+        padding-right: 50px; /* 增加右側空間，避免文字一開始就超出可見範圍 */
       }
       .marquee {
         display: block;
@@ -343,11 +387,19 @@
       <div class="marquee"></div>
     </div>
 
-    <!-- 顏色選擇按鈕 -->
-    <div class="color-buttons">
-      <button id="gold" class="color-button active" onclick="changeWatchColor('gold')"></button>
-      <button id="red" class="color-button" onclick="changeWatchColor('red')"></button>
-      <button id="black" class="color-button" onclick="changeWatchColor('black')"></button>
+    <!-- 組合式描述與按鈕容器 -->
+    <div class="description-buttons-container">
+      <!-- 手錶描述文字 -->
+      <div id="watchDescription">
+        <div class="scrolling-content"></div>
+      </div>
+
+      <!-- 顏色選擇按鈕 -->
+      <div class="color-buttons">
+        <button id="gold" class="color-button active" onclick="changeWatchColor('gold')"></button>
+        <button id="red" class="color-button" onclick="changeWatchColor('red')"></button>
+        <button id="black" class="color-button" onclick="changeWatchColor('black')"></button>
+      </div>
     </div>
 
     <!-- Material UI style Change Camera button -->
