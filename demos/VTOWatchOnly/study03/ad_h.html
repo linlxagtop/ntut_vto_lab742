@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daniel Wellington - Classic Series</title>
+    <link rel="icon" href="../assets/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Noto Sans TC', sans-serif;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        .header {
+            background-color: #d1d1d1;
+            text-align: center;
+            padding: 40px 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 5px;
+        }
+        .product-section {
+            margin-bottom: 60px;
+            background-color: #fff;
+        }
+        .product-container {
+            display: flex;
+            flex-direction: row;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .product-images {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+        .main-image {
+            width: 100%;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .main-image img {
+            width: 100%;
+            aspect-ratio: 1/1;
+        }
+        .side-images {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            justify-content: space-between;
+        }
+        .product-images img {
+            height: auto;
+            display: block;
+            border: none;
+            object-fit: cover;
+        }
+        .side-images img {
+            width: calc(50% - 10px);
+            aspect-ratio: 1/1;
+        }
+        .product-info {
+            flex: 1;
+            padding: 40px;
+        }
+        .product-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            font-weight: 700;
+            margin: 0 0 20px;
+            color: #222;
+        }
+        .product-description {
+            font-size: 16px;
+            line-height: 1.8;
+            margin: 0 0 30px;
+        }
+        .color-options {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .color-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .color-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .color-silver {
+            background-color: #c0c0c0;
+        }
+        .color-black {
+            background-color: #000;
+        }
+        .color-green {
+            background-color: #6b6b47;
+        }
+        .product-details {
+            font-size: 18px;
+            margin-top: 30px;
+        }
+        .price {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        .currency {
+            font-size: 18px;
+            font-weight: normal;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .product-container {
+                flex-direction: column;
+                padding: 15px;
+            }
+            .product-info {
+                order: -1; /* Move product info to the top on mobile */
+                padding: 30px 20px;
+            }
+            .product-images {
+                padding: 15px;
+                max-width: 100%;
+            }
+            .main-image {
+                margin-bottom: 15px;
+            }
+            .side-images {
+                gap: 15px;
+            }
+            .side-images img {
+                width: calc(50% - 7.5px);
+            }
+            .product-title {
+                font-size: 32px;
+            }
+            .header h1 {
+                font-size: 36px;
+            }
+        }
+        
+        /* Survey Button */
+        .survey-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #4285f4, #0d47a1);
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            border-radius: 30px;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        .survey-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+        }
+        
+        @media (max-width: 768px) {
+            .survey-button {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>DANIEL WELLINGTON</h1>
+    </div>
+
+    <!-- Product Section 1 -->
+    <div class="product-section">
+        <div class="product-container">
+            <div class="product-images">
+                <div class="main-image">
+                    <img src="../assets/img/high_res_red_100.png" alt="A silver watch with a black, white, and red striped strap">
+                </div>
+                <div class="side-images">
+                    <img src="../assets/img/high_res_black_100.png" alt="A black watch with a black and white striped strap">
+                    <img src="../assets/img/high_res_gold_100.png" alt="A green watch with a black and orange striped strap">
+                </div>
+            </div>
+            <div class="product-info">
+                <h2 class="product-title">Classic Series</h2>
+                <p class="product-description">
+                    百搭型、日常款。
+                    <strong>Classic Series</strong>
+                    完美詮釋了簡潔時尚風格，多款經典錶帶，純淨典雅。這款手錶可以提升您的日常服裝、心情和精神。
+                </p>
+                <div class="color-options">
+                    <div class="color-option">
+                        <div class="color-circle color-silver"></div>
+                        <span>- 銀色</span>
+                    </div>
+                    <div class="color-option">
+                        <div class="color-circle color-black"></div>
+                        <span>- 黑色</span>
+                    </div>
+                    <div class="color-option">
+                        <div class="color-circle color-green"></div>
+                        <span>- 軍綠色</span>
+                    </div>
+                </div>
+                <div class="product-details">
+                    <div>尺寸 - 36mm</div>
+                    <div class="price">$4,690.00 <span class="currency">TWD</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Section 2 -->
+    <div class="product-section">
+        <div class="product-container">
+            <div class="product-images">
+                <div class="main-image">
+                    <img src="../assets/img/high_res_red_600_01.png" alt="A silver watch with a leather strap">
+                </div>
+                <div class="side-images">
+                    <img src="../assets/img/high_res_red_600_02.JPG" alt="A close-up of the watch face">
+                    <img src="../assets/img/high_res_red_600_03.JPG" alt="The watch from another angle">
+                </div>
+            </div>
+            <div class="product-info">
+                <h2 class="product-title">Classic Canterbury</h2>
+                <p class="product-description">
+                    此精美錶款設計靈感源自經典旗幟的鮮明顏色，紅、白、黑的錶帶搭配銀色錶框，展現永不過時的美式時尚風格。
+                    <br/>
+                    活潑配色與簡約優雅的超薄6mm錶盤、36mm錶徑，帶給您同時兼具時尚品味與實用性的手錶，無論是出席正式場合或是享受悠閒的假期，這款手錶隨時都是您的時尚配件。
+                </p>
+                <div class="color-options">
+                    <div class="color-option">
+                        <div class="color-circle color-silver"></div>
+                        <span>- 銀色</span>
+                    </div>
+                </div>
+                <div class="product-details">
+                    <div>尺寸 - 36mm</div>
+                    <div class="price">$4,690.00 <span class="currency">TWD</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Section 3 -->
+    <div class="product-section">
+        <div class="product-container">
+            <div class="product-images">
+                <div class="main-image">
+                    <img src="../assets/img/high_res_black_600_01.png" alt="A gold watch with a mesh strap">
+                </div>
+                <div class="side-images">
+                    <img src="../assets/img/high_res_black_600_02.JPG" alt="Side view of the gold watch">
+                    <img src="../assets/img/high_res_black_600_03.JPG" alt="Close-up of the mesh strap">
+                </div>
+            </div>
+            <div class="product-info">
+                <h2 class="product-title">Classic Glasgow</h2>
+                <p class="product-description">
+                    此精美錶款，高雅黑色錶框搭配黑白相間的錶帶，展現時尚都會風格，黑白對比呈現簡約純粹的風格，低調而不失格調。
+                    <br/>
+                    採用超薄6mm錶盤、36mm錶徑設計，每一刻都充滿精緻感與簡約典雅，此款手錶讓您從經典優雅到隨興時尚，根據您的日常隨心所欲變換風格。
+                </p>
+                <div class="color-options">
+                    <div class="color-option">
+                        <div class="color-circle" style="background-color: #000000;"></div>
+                        <span>- 黑色</span>
+                    </div>
+                </div>
+                <div class="product-details">
+                    <div>尺寸 - 36mm</div>
+                    <div class="price">$4,690.00 <span class="currency">TWD</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Section 4 -->
+    <div class="product-section">
+        <div class="product-container">
+            <div class="product-images">
+                <div class="main-image">
+                    <img src="../assets/img/high_res_gold_600_01.png" alt="A minimalist watch with a white face">
+                </div>
+                <div class="side-images">
+                    <img src="../assets/img/high_res_gold_600_02.JPG" alt="The watch with a brown leather strap">
+                    <img src="../assets/img/high_res_gold_600_03.PNG" alt="The watch with a black leather strap">
+                </div>
+            </div>
+            <div class="product-info">
+                <h2 class="product-title">Classic Auburn</h2>
+                <p class="product-description">
+                    此精美錶款融合了復古與現代設計，軍綠色錶框搭配黑色與橘色條紋錶帶，展現獨特的個性與魅力。
+                    <br/>
+                    6mm超薄錶盤及36mm 錶徑設計，使其適合日常休閒穿搭，也能在戶外活動中輕鬆駕馭，不論是都市探險還是週末出遊，這款手錶都能完美襯托您的自在風格。
+                </p>
+                <div class="color-options">
+                    <div class="color-option">
+                        <div class="color-circle" style="background-color: #7b7759;"></div>
+                        <span>- 軍綠色</span>
+                    </div>
+                </div>
+                <div class="product-details">
+                    <div>尺寸 - 36mm</div>
+                    <div class="price">$4,690.00 <span class="currency">TWD</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Survey Button -->
+    <a href="https://forms.gle/Zu6ptdGsyDPzdQk16" class="survey-button" target="_blank">前往填寫問卷</a>
+</body>
+</html>

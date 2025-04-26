@@ -109,6 +109,48 @@ const marqueeData = {
   }
 }
 
+// 影片數據結構，根據 gParam 和 color 映射到特定的影片 ID
+const videoData = {
+  // 可用的影片列表
+  availableVideos: [
+    'ClassicAuburn_High', 'ClassicAuburn_Low',
+    'ClassicCanterbury_High', 'ClassicCanterbury_Low',
+    'ClassicGlasgow_High', 'ClassicGlasgow_Low',
+    'Welcome_High', 'Welcome_Low'
+  ],
+  // 預設影片組
+  comm: {
+    red: 'ClassicCanterbury_High',
+    black: 'ClassicGlasgow_High',
+    gold: 'ClassicAuburn_High'
+  },
+  // 高解析度影片組
+  high: {
+    red: 'ClassicCanterbury_High',
+    black: 'ClassicGlasgow_High',
+    gold: 'ClassicAuburn_High'
+  },
+  // 低解析度影片組
+  low: {
+    red: 'ClassicCanterbury_Low',
+    black: 'ClassicGlasgow_Low',
+    gold: 'ClassicAuburn_Low'
+  },
+  // 其他研究版本的影片組
+  uti: {
+    red: 'ClassicCanterbury_High',
+    black: 'ClassicGlasgow_High',
+    gold: 'ClassicAuburn_High'
+  },
+  hed: {
+    red: 'ClassicCanterbury_High',
+    black: 'ClassicGlasgow_High',
+    gold: 'ClassicAuburn_High'
+  },
+  // 預設影片
+  default: 'Welcome_High'
+};
+
 const _states = {
   notLoaded: -1,
   loading: 0,
@@ -501,22 +543,12 @@ function changeWatchColor(color) {
   } 
   else if (studyParam === '3' || studyParam === '4') {
     // 若 s 參數是 3 或 4，需要依照點選 color 更新 videoId 以播放不同影片
+    // 根據 gParam 和 color 取得對應的影片 ID
     let videoId;
-    
-    // 根據選擇的顏色設定對應的影片 ID
-    switch (color) {
-      case 'red':
-        videoId = 'ClassicCanterbury_High';
-        break;
-      case 'black':
-        videoId = 'ClassicGlasgow_High';
-        break;
-      case 'gold':
-        videoId = 'ClassicAuburn_High';
-        break;
-      default:
-        // 預設影片，以防 color 不在預期範圍內
-        videoId = 'Welcome_High';
+    if (videoData[gParam] && videoData[gParam][color]) {
+      videoId = videoData[gParam][color];
+    } else {
+      videoId = videoData.default;
     }
     
     // 播放對應的影片
@@ -531,16 +563,8 @@ window.changeWatchColor = changeWatchColor;
 function playVideo(videoId = 'Welcome_High') {
   const videoPlayer = document.getElementById('videoPlayer');
   if (videoPlayer) {
-    // 可用的影片列表
-    const availableVideos = [
-      'ClassicAuburn_High', 'ClassicAuburn_Low',
-      'ClassicCanterbury_High', 'ClassicCanterbury_Low',
-      'ClassicGlasgow_High', 'ClassicGlasgow_Low',
-      'Welcome_High', 'Welcome_Low'
-    ];
-    
     // 檢查videoId是否在可用列表中，若不在則使用預設值
-    const validVideoId = availableVideos.includes(videoId) ? videoId : 'Welcome_High';
+    const validVideoId = videoData.availableVideos.includes(videoId) ? videoId : videoData.default;
     
     // 設置影片來源並加載
     videoPlayer.src = `https://video.zeabur.app/${validVideoId}.mp4`;
@@ -562,14 +586,6 @@ window.playVideo = playVideo;
 // URL參數處理函數
 function handleUrlParameters() {
   const urlParams = new URLSearchParams(window.location.search);
-  
-  // 處理影片參數 v
-  const videoId = urlParams.get('v');
-  if (videoId) {
-    const videoPlayer = document.getElementById('videoPlayer');
-    videoPlayer.style.display = 'block';
-    playVideo(videoId); // 使用新的 playVideo 函數
-  }
   
   // 處理3D模型解析度參數 res
   const resolution = urlParams.get('res');
@@ -599,9 +615,6 @@ function handleUrlParameters() {
   } else {
     _settings.currentStudy = 'study01'; // 預設使用study01
   }
-  console.log('Using study version:', _settings.currentStudy);
-  console.log('Using g parameter:', gParam);
-  console.log('Using c parameter:', commentId);
   
   // 處理跑馬燈參數 c
   _settings.marqueeState = commentId ? commentId : null;
@@ -610,6 +623,34 @@ function handleUrlParameters() {
   if ((studyParam === '1' || studyParam === '2') && gParam) {
     loadWatchDescription(_settings.currentStudy, gParam, _settings.currentWatchColor);
   }
+  
+  // 處理影片參數 v
+  const videoId = urlParams.get('v');
+  if (videoId) {
+    const videoPlayer = document.getElementById('videoPlayer');
+    videoPlayer.style.display = 'block';
+    playVideo(videoId); // 使用新的 playVideo 函數
+  } else {
+    // 若沒有指定影片參數，但有其他參數，則根據 gParam 和 color 選擇影片
+    const gParam = urlParams.get('g');
+    const studyParam = urlParams.get('s');
+    
+    // 只有當 s=3 或 s=4 且有 gParam 參數時，才根據 videoData 選擇影片
+    if ((studyParam === '3' || studyParam === '4') && gParam && videoData[gParam]) {
+      const color = _settings.currentWatchColor || 'gold'; // 預設為 gold
+      
+      if (videoData[gParam][color]) {
+        const videoPlayer = document.getElementById('videoPlayer');
+        if (videoPlayer) videoPlayer.style.display = 'block';
+        playVideo(videoData[gParam][color]);
+      }
+    }
+  }
+
+  console.log('Using study version:', _settings.currentStudy);
+  console.log('Using g parameter:', gParam);
+  console.log('Using c parameter:', commentId);
+  console.log('Using v parameter:', videoId);
 }
 
 // 更新跑馬燈文字
