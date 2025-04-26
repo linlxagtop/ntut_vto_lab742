@@ -466,37 +466,98 @@ function changeWatchColor(color) {
     setActiveButton(document.getElementById(color));
   }
   
-  // 取得網址 g 參數
+  // 取得網址參數
   const urlParams = new URLSearchParams(window.location.search);
   const gParam = urlParams.get('g'); // 例如 'uti' 或 'hed'
+  const studyParam = urlParams.get('s'); // 研究版本參數
   // 使用當前研究版本 (從handleUrlParameters中獲取)
   const currentStudy = _settings.currentStudy || 'study01';
   
-  // 若 g 參數與 color 都存在於 marqueeData 中
-  if (gParam && marqueeData[currentStudy] && marqueeData[currentStudy][gParam] && marqueeData[currentStudy][gParam][color]) {
-    const jsonPath = marqueeData[currentStudy][gParam][color];
-    const scrollingText = document.getElementById('scrollingText');
-    fetch(jsonPath)
-      .then(response => response.json())
-      .then(data => {
-        if (scrollingText && data.comments) {
-          scrollingText.style.display = 'block';
-          updateMarqueeText(data.comments);
-        }
-      })
-      .catch(error => console.error('Error loading messages:', error));
-  } else {
-    // 若無對應資料則隱藏跑馬燈
-    const scrollingText = document.getElementById('scrollingText');
-    if (scrollingText) scrollingText.style.display = 'none';
+  // 檢查研究版本參數
+  if (studyParam === '1' || studyParam === '2') {
+    // 若 s 參數是 1 或 2，才需要 scrollingText 和 WatchDescription
+    
+    // 若 g 參數與 color 都存在於 marqueeData 中
+    if (gParam && marqueeData[currentStudy] && marqueeData[currentStudy][gParam] && marqueeData[currentStudy][gParam][color]) {
+      const jsonPath = marqueeData[currentStudy][gParam][color];
+      const scrollingText = document.getElementById('scrollingText');
+      fetch(jsonPath)
+        .then(response => response.json())
+        .then(data => {
+          if (scrollingText && data.comments) {
+            scrollingText.style.display = 'block';
+            updateMarqueeText(data.comments);
+          }
+        })
+        .catch(error => console.error('Error loading messages:', error));
+    } else {
+      // 若無對應資料則隱藏跑馬燈
+      const scrollingText = document.getElementById('scrollingText');
+      if (scrollingText) scrollingText.style.display = 'none';
+    }
+    
+    // 載入手錶描述
+    loadWatchDescription(currentStudy, gParam, color);
+  } 
+  else if (studyParam === '3' || studyParam === '4') {
+    // 若 s 參數是 3 或 4，需要依照點選 color 更新 videoId 以播放不同影片
+    let videoId;
+    
+    // 根據選擇的顏色設定對應的影片 ID
+    switch (color) {
+      case 'red':
+        videoId = 'ClassicCanterbury_High';
+        break;
+      case 'black':
+        videoId = 'ClassicGlasgow_High';
+        break;
+      case 'gold':
+        videoId = 'ClassicAuburn_High';
+        break;
+      default:
+        // 預設影片，以防 color 不在預期範圍內
+        videoId = 'Welcome_High';
+    }
+    
+    // 播放對應的影片
+    playVideo(videoId);
   }
-  
-  // 載入手錶描述
-  loadWatchDescription(currentStudy, gParam, color);
 }
 
 // 將 changeWatchColor 函數添加到 window 對象，使其可以從 HTML 中調用
 window.changeWatchColor = changeWatchColor;
+
+// 播放指定影片的函數
+function playVideo(videoId = 'Welcome_High') {
+  const videoPlayer = document.getElementById('videoPlayer');
+  if (videoPlayer) {
+    // 可用的影片列表
+    const availableVideos = [
+      'ClassicAuburn_High', 'ClassicAuburn_Low',
+      'ClassicCanterbury_High', 'ClassicCanterbury_Low',
+      'ClassicGlasgow_High', 'ClassicGlasgow_Low',
+      'Welcome_High', 'Welcome_Low'
+    ];
+    
+    // 檢查videoId是否在可用列表中，若不在則使用預設值
+    const validVideoId = availableVideos.includes(videoId) ? videoId : 'Welcome_High';
+    
+    // 設置影片來源並加載
+    videoPlayer.src = `https://video.zeabur.app/${validVideoId}.mp4`;
+    videoPlayer.load();
+    
+    // 自動播放
+    videoPlayer.play().catch(e => console.error('自動播放失敗:', e));
+    
+    return true;
+  } else {
+    console.error('Video player not found');
+    return false;
+  }
+}
+
+// 將 playVideo 函數添加到 window 對象，使其可以從 HTML 中調用
+window.playVideo = playVideo;
 
 // URL參數處理函數
 function handleUrlParameters() {
@@ -504,17 +565,10 @@ function handleUrlParameters() {
   
   // 處理影片參數 v
   const videoId = urlParams.get('v');
-  const videoPlayer = document.getElementById('videoPlayer');
-  if (videoId && videoPlayer) {
-    videoPlayer.src = `https://video.zeabur.app/${videoId}.mp4`;
-    videoPlayer.load();
-  }
-  else if (videoPlayer) {
-    videoPlayer.src = `https://video.zeabur.app/Welcome_High.mp4`;
-    videoPlayer.load();
-  }
-  else{
-    console.error('Video player not found');
+  if (videoId) {
+    const videoPlayer = document.getElementById('videoPlayer');
+    videoPlayer.style.display = 'block';
+    playVideo(videoId); // 使用新的 playVideo 函數
   }
   
   // 處理3D模型解析度參數 res
@@ -553,7 +607,7 @@ function handleUrlParameters() {
   _settings.marqueeState = commentId ? commentId : null;
   
   // 載入初始手錶描述
-  if (gParam) {
+  if ((studyParam === '1' || studyParam === '2') && gParam) {
     loadWatchDescription(_settings.currentStudy, gParam, _settings.currentWatchColor);
   }
 }
