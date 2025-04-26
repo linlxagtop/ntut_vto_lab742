@@ -39,75 +39,83 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
     <!-- Material Icons & Material Button CSS -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <style>
-      .mui-btn {
+     <style>
+      /* 統一按鈕樣式 */
+      .unified-btn {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 8px;
         background: #1976d2;
         color: #fff;
         border: none;
         border-radius: 4px;
-        padding: 12px 24px;
-        font-size: 14px;
         font-family: 'Roboto', sans-serif;
         box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
         cursor: pointer;
-        transition: background 0.2s, box-shadow 0.2s;
-        position: fixed;
-        top: 70px; /* Moved down to make room for the countdown timer */
-        left: 24px;
-        z-index: 1000;
-      }
-      .mui-btn:hover {
-        background: #1565c0;
-        box-shadow: 0 4px 8px rgba(25, 118, 210, 0.3);
-      }
-      .mui-btn .material-icons {
-        font-size: 18px;
-      }
-      /* Survey Button Style from ad_h.html */
-      .survey-button {
-        padding: 15px 25px;
-        background: linear-gradient(135deg, #4285f4, #0d47a1);
-        color: white;
-        font-weight: 600;
-        font-size: 14px;
-        border-radius: 30px;
-        text-decoration: none;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         transition: all 0.3s ease;
-        display: inline-block;
-        line-height: 1;
+        text-decoration: none;
+        font-weight: 600;
+        text-align: center;
+        width: 100%;
+        padding: 10px 16px;
+        font-size: 14px;
+        min-width: 100px;
       }
       
-      /* Countdown Timer Style */
-      .countdown-timer {
+      .unified-btn:hover {
+        background: #1565c0;
+        box-shadow: 0 4px 8px rgba(25, 118, 210, 0.3);
+        transform: translateY(-2px);
+      }
+      
+      .unified-btn .material-icons {
+        font-size: 18px;
+      }
+      
+      /* 共用容器樣式 */
+      .control-wrapper {
         position: fixed;
-        top: 24px;
-        left: 24px;
-        padding: 12px 24px;
-        background: rgba(0, 0, 0, 0.6);
-        color: white;
-        font-size: 14px;
-        border-radius: 4px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         z-index: 1000;
-        backdrop-filter: blur(5px);
+        width: 100px;
         display: none; /* Initially hidden */
-        width: 105px; /* Match width with change_camera button */
-        text-align: center;
       }
-      .survey-button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+      
+      /* 切換鏡頭按鈕容器 */
+      #changeCameraWrapper {
+        top: 20px;
+        left: 20px;
       }
-      @media (max-width: 768px) {
-        .survey-button {
-          padding: 12px 18px;
-          font-size: 14px;
-          bottom: 18px;
-          right: 18px;
+      
+      /* 倒數計時器容器 */
+      #countdownTimerWrapper {
+        top: 80px; /* changeCameraWrapper下方20px */
+        left: 20px;
+      }
+      
+      /* 問卷按鈕容器 */
+      #surveyButtonWrapper {
+        top: 80px; /* 與countdownTimerWrapper相同位置 */
+        left: 20px;
+      }
+
+      @media (max-width: 768px) { 
+        /* 切換鏡頭按鈕容器 */
+        #changeCameraWrapper {
+          top: 10px;
+          left: 10px;
+        }
+        
+        /* 倒數計時器容器 */
+        #countdownTimerWrapper {
+          top: 60px; /* changeCameraWrapper下方20px */
+          left: 10px;
+        }
+        
+        /* 問卷按鈕容器 */
+        #surveyButtonWrapper {
+          top: 60px; /* 與countdownTimerWrapper相同位置 */
+          left: 10px;
         }
       }
     </style>
@@ -420,21 +428,22 @@
       </div>
     </div>
 
-    <!-- Wrapper div for changeCamera button (hidden by default) -->
-    <div id="changeCameraWrapper" style="display: none;">
-      <!-- Material UI style Change Camera button -->
-      <button onclick="change_camera()" id="changeCamera" class="mui-btn">
+    <!-- Wrapper div for changeCamera button -->
+    <div id="changeCameraWrapper" class="control-wrapper">
+      <div class="unified-btn" onclick="change_camera()">
         <span class="material-icons">flip_camera_android</span>
         切換鏡頭
-      </button>
+      </div>
     </div>
-    <!-- Countdown Timer -->
-    <div id="countdownTimer" class="countdown-timer">實驗時間 01:00</div>
+    
+    <!-- Countdown Timer Wrapper -->
+    <div id="countdownTimerWrapper" class="control-wrapper">
+      <div id="countdownTimer" class="unified-btn">實驗時間 01:00</div>
+    </div>
     
     <!-- Survey Button Wrapper -->
-    <div id="surveyButtonWrapper" style="display: none; height: 1.5em; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;">
-      <!-- Survey Button (仿 ad_h.html) -->
-      <a href="https://forms.gle/yYfmFiMMSeSCvUXp9" class="survey-button" target="_blank">前往填寫問卷</a>
+    <div id="surveyButtonWrapper" class="control-wrapper">
+      <a href="https://forms.gle/yYfmFiMMSeSCvUXp9" class="unified-btn" target="_blank">前往填寫問卷</a>
     </div>
   </body>
 </html>

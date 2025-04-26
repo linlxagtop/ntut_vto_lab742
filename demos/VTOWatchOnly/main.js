@@ -92,6 +92,20 @@ const marqueeData = {
       'gold': 'study02/study02_comm_gold.json',
       'red': 'study02/study02_comm_red.json'
     }
+  },
+  'study03': {
+    'comm': {
+      'black': 'study03/study03_comm_black.json',
+      'gold': 'study03/study03_comm_gold.json',
+      'red': 'study03/study03_comm_red.json'
+    }
+  },
+  'study04': {
+    'comm': {
+      'black': 'study04/study04_comm_black.json',
+      'gold': 'study04/study04_comm_gold.json',
+      'red': 'study04/study04_comm_red.json'
+    }
   }
 }
 
@@ -371,18 +385,21 @@ function callbackTrack(detectState){
     }
     
     // 手錶描述顯示處理（只在第一次觸發時顯示）
-    if (!_isWatchDescriptionShown && _settings.currentWatchDescription) {
+    if (!_isWatchDescriptionShown) {
       const watchDescription = document.getElementById('watchDescription');
       const descriptionContainer = document.querySelector('.description-buttons-container');
-      if (watchDescription) {
+      const currentWatchDescription = _settings.currentWatchDescription;
+      const currentStudy = _settings.currentStudy;
+      // 確保容器必須顯示
+      if (descriptionContainer) {
+        descriptionContainer.style.display = 'block';
+      }
+      // 確保挑色選項按鈕顯示，並設定 gold 按鈕預設被選中
+      setActiveButton(document.getElementById('gold'));
+      _isWatchDescriptionShown = true;
+      // 只有study01和study02才顯示手錶描述
+      if ((currentStudy=='study01' || currentStudy=='study02') && watchDescription && currentWatchDescription) {
         watchDescription.style.display = 'block';
-        // 確保容器也顯示
-        if (descriptionContainer) {
-          descriptionContainer.style.display = 'block';
-        }
-        // 確保 gold 按鈕預設被選中
-        setActiveButton(document.getElementById('gold'));
-        _isWatchDescriptionShown = true;
       }
     }
     
@@ -634,15 +651,21 @@ function loadWatchDescription(studyVersion, gParam, color) {
 function startCountdownTimer() {
   // 取得需要控制的元素
   const countdownEl = document.getElementById('countdownTimer');
+  const countdownWrapper = document.getElementById('countdownTimerWrapper');
   const changeCameraWrapper = document.getElementById('changeCameraWrapper');
   const videoPlayer = document.getElementById('videoPlayer');
   const scrollingText = document.getElementById('scrollingText');
   const descriptionContainer = document.querySelector('.description-buttons-container');
   const surveyButtonWrapper = document.getElementById('surveyButtonWrapper');
   
-  // 顯示計時器
-  if (countdownEl) {
-    countdownEl.style.display = 'block';
+  // 顯示倒數計時器容器
+  if (countdownWrapper) {
+    countdownWrapper.style.display = 'block';
+  }
+  
+  // 顯示切換鏡頭按鈕容器
+  if (changeCameraWrapper) {
+    changeCameraWrapper.style.display = 'block';
   }
   
   // 設定初始時間（60秒）
@@ -666,14 +689,15 @@ function startCountdownTimer() {
     if (timeLeft <= 0) {
       clearInterval(_countdownInterval);
       
-      // 隱藏元素 暫時不需隱藏元素
-      //if (changeCameraWrapper) changeCameraWrapper.style.display = 'none';
+      // 隱藏倒數計時器容器
+      if (countdownWrapper) countdownWrapper.style.display = 'none';
+      
+      // 其他元素保持不變
       //if (videoPlayer) videoPlayer.style.display = 'none';
       //if (scrollingText) scrollingText.style.display = 'none';
       //if (descriptionContainer) descriptionContainer.style.display = 'none';
-      //if (countdownEl) countdownEl.style.display = 'none';
       
-      // 顯示問卷按鈕
+      // 顯示問卷按鈕容器，位置與倒數計時器容器相同
       if (surveyButtonWrapper) surveyButtonWrapper.style.display = 'block';
     }
   }, 1000);
