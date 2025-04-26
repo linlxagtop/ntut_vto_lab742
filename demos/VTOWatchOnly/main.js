@@ -85,6 +85,13 @@ const marqueeData = {
       'gold': 'study01/study01_hed_gold.json',
       'red': 'study01/study01_hed_red.json'
     }
+  },
+  'study02': {
+    'comm': {
+      'black': 'study02/study02_comm_black.json',
+      'gold': 'study02/study02_comm_gold.json',
+      'red': 'study02/study02_comm_red.json'
+    }
   }
 }
 
@@ -386,9 +393,11 @@ function callbackTrack(detectState){
         const urlParams = new URLSearchParams(window.location.search);
         const gParam = urlParams.get('g');
         const color = _settings.currentWatchColor || 'gold';
-        // 內容根據 g 參數與目前顏色
-        if (gParam && marqueeData['study01'] && marqueeData['study01'][gParam] && marqueeData['study01'][gParam][color]) {
-          const jsonPath = marqueeData['study01'][gParam][color];
+        const studyVersion = _settings.currentStudy || 'study01';
+        // 內容根據 studyVersion, g 參數與目前顏色
+        if (gParam && marqueeData[studyVersion] && marqueeData[studyVersion][gParam] && marqueeData[studyVersion][gParam][color]) {
+          const jsonPath = marqueeData[studyVersion][gParam][color];
+          console.log('Loading marquee data from:', jsonPath);
           fetch(jsonPath)
             .then(response => response.json())
             .then(data => {
@@ -401,6 +410,7 @@ function callbackTrack(detectState){
             .catch(error => console.error('Error loading messages:', error));
         } else {
           // 若無對應資料則隱藏跑馬燈
+          console.log('No marquee data found for:', studyVersion, gParam, color);
           if (scrollingText) scrollingText.style.display = 'none';
           _isMarqueeShown = true;
         }
@@ -501,12 +511,11 @@ function handleUrlParameters() {
   console.log('Initial model URL set to:', _settings.modelURL);
   console.log('Using model set:', resolution === 'low' ? 'low resolution' : 'high resolution');
 
-  // 處理跑馬燈參數 c
-  const commentId = urlParams.get('c');
-  _settings.marqueeState = commentId ? commentId : null;
-  
   // 處理研究版本參數 s
   const studyParam = urlParams.get('s');
+  let gParam = urlParams.get('g'); // 例如 'uti' 或 'hed'或 'comm'
+  let commentId = urlParams.get('c');
+  
   // 設定研究版本 (從study01到study04)
   if (studyParam === '1') {
     _settings.currentStudy = 'study01';
@@ -520,9 +529,13 @@ function handleUrlParameters() {
     _settings.currentStudy = 'study01'; // 預設使用study01
   }
   console.log('Using study version:', _settings.currentStudy);
+  console.log('Using g parameter:', gParam);
+  console.log('Using c parameter:', commentId);
+  
+  // 處理跑馬燈參數 c
+  _settings.marqueeState = commentId ? commentId : null;
   
   // 載入初始手錶描述
-  const gParam = urlParams.get('g'); // 例如 'uti' 或 'hed'
   if (gParam) {
     loadWatchDescription(_settings.currentStudy, gParam, _settings.currentWatchColor);
   }
@@ -633,7 +646,7 @@ function startCountdownTimer() {
   }
   
   // 設定初始時間（60秒）
-  let timeLeft = 60;
+  let timeLeft = 10;
   
   // 每秒更新計時器
   _countdownInterval = setInterval(function() {
