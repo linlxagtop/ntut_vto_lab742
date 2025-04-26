@@ -646,7 +646,7 @@ function startCountdownTimer() {
   }
   
   // 設定初始時間（60秒）
-  let timeLeft = 10;
+  let timeLeft = 60;
   
   // 每秒更新計時器
   _countdownInterval = setInterval(function() {
