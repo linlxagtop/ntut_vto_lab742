@@ -387,16 +387,17 @@
     <!-- instructions: -->
     <div id='instructions' class='modal'>
       <div>
-        Place your hand like that:<br/>
+        請抬起手腕如圖所示，並調整位置使手錶出現在手腕上<br/>
         <img src='assets/VTOWristGuidline500px.png' class="instructionsImg" /><br/>
-        <button class='instructionsOK' onclick="hide_instructions()">OK</button>
+        <!-- OK 按鈕，暫時不需顯示，予以隱藏 -->
+        <button class='instructionsOK' onclick="hide_instructions()" style="display: none;">OK</button>
       </div>
     </div>
 
     <!-- 影片播放器 -->
     <video id="videoPlayer" controls>
       <source type="video/mp4">
-      Your browser does not support the video tag.
+      您的瀏覽器不支援影片播放器。
     </video>
 
     <!-- 跑馬燈文字 -->

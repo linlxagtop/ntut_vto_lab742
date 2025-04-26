@@ -653,12 +653,12 @@ function startCountdownTimer() {
     if (timeLeft <= 0) {
       clearInterval(_countdownInterval);
       
-      // 隱藏元素
-      if (changeCameraWrapper) changeCameraWrapper.style.display = 'none';
-      if (videoPlayer) videoPlayer.style.display = 'none';
-      if (scrollingText) scrollingText.style.display = 'none';
-      if (descriptionContainer) descriptionContainer.style.display = 'none';
-      if (countdownEl) countdownEl.style.display = 'none';
+      // 隱藏元素 暫時不需隱藏元素
+      //if (changeCameraWrapper) changeCameraWrapper.style.display = 'none';
+      //if (videoPlayer) videoPlayer.style.display = 'none';
+      //if (scrollingText) scrollingText.style.display = 'none';
+      //if (descriptionContainer) descriptionContainer.style.display = 'none';
+      //if (countdownEl) countdownEl.style.display = 'none';
       
       // 顯示問卷按鈕
       if (surveyButtonWrapper) surveyButtonWrapper.style.display = 'block';
