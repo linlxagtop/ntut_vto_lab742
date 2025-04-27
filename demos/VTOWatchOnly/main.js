@@ -570,8 +570,18 @@ function playVideo(videoId = 'Welcome_High') {
     videoPlayer.src = `https://video.zeabur.app/${validVideoId}.mp4`;
     videoPlayer.load();
     
+    // 確保影片屬性設置正確
+    videoPlayer.setAttribute('playsinline', '');
+    videoPlayer.setAttribute('webkit-playsinline', '');
+    videoPlayer.muted = false; // 取消靜音以便能聽到聲音
+    
     // 自動播放
-    videoPlayer.play().catch(e => console.error('自動播放失敗:', e));
+    videoPlayer.play().catch(e => {
+      console.error('自動播放失敗:', e);
+      // 如果失敗，嘗試使用靜音播放作為備用方案
+      videoPlayer.muted = true;
+      videoPlayer.play().catch(err => console.error('靜音自動播放也失敗:', err));
+    });
     
     return true;
   } else {
