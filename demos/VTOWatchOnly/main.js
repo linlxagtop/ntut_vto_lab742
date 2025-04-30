@@ -374,6 +374,80 @@ function hide_instructions(){
   setTimeout(function(){
     domInstructions.parentNode.removeChild(domInstructions);
   }, 800);
+  
+  // 執行 callbackTrack 中的必要動作
+  
+  // 1. 啟動倒數計時器
+  if (!_isCountdownStarted) {
+    startCountdownTimer();
+    _isCountdownStarted = true;
+  }
+  
+  // 2. 處理影片播放
+  const urlParams = new URLSearchParams(window.location.search);
+  const videoId = urlParams.get('v');
+  const videoPlayer = document.getElementById('videoPlayer');
+  if (videoId && !_isVideoStarted && _state === _states.running) {
+    _isVideoStarted = true;
+    videoPlayer.style.display = 'block';
+    setTimeout(() => {
+      videoPlayer.play().catch(error => {
+        console.log('Video autoplay failed:', error);
+      });
+    }, 1000);
+  }
+  
+  // 3. 顯示手錶描述
+  if (!_isWatchDescriptionShown) {
+    const watchDescription = document.getElementById('watchDescription');
+    const descriptionContainer = document.querySelector('.description-buttons-container');
+    const currentWatchDescription = _settings.currentWatchDescription;
+    const currentStudy = _settings.currentStudy;
+    // 確保容器必須顯示
+    if (descriptionContainer) {
+      descriptionContainer.style.display = 'block';
+    }
+    // 確保挑色選項按鈕顯示，並設定 gold 按鈕預設被選中
+    setActiveButton(document.getElementById('gold'));
+    _isWatchDescriptionShown = true;
+    // 只有study01和study02才顯示手錶描述
+    if ((currentStudy=='study01' || currentStudy=='study02') && watchDescription && currentWatchDescription) {
+      watchDescription.style.display = 'block';
+    }
+  }
+  
+  // 4. 處理跑馬燈顯示
+  const scrollingText = document.getElementById('scrollingText');
+  if (_settings.marqueeState) {
+    if (!_isMarqueeShown) {
+      const gParam = urlParams.get('g');
+      const color = _settings.currentWatchColor || 'gold';
+      const studyVersion = _settings.currentStudy || 'study01';
+      // 內容根據 studyVersion, g 參數與目前顏色
+      if (gParam && marqueeData[studyVersion] && marqueeData[studyVersion][gParam] && marqueeData[studyVersion][gParam][color]) {
+        const jsonPath = marqueeData[studyVersion][gParam][color];
+        console.log('Loading marquee data from:', jsonPath);
+        fetch(jsonPath)
+          .then(response => response.json())
+          .then(data => {
+            if (scrollingText && data.comments) {
+              scrollingText.style.display = 'block';
+              updateMarqueeText(data.comments);
+              _isMarqueeShown = true;
+            }
+          })
+          .catch(error => console.error('Error loading messages:', error));
+      } else {
+        // 若無對應資料則隱藏跑馬燈
+        console.log('No marquee data found for:', studyVersion, gParam, color);
+        if (scrollingText) scrollingText.style.display = 'none';
+        _isMarqueeShown = true;
+      }
+    }
+  } else {
+    if (scrollingText) scrollingText.style.display = 'none';
+    _isMarqueeShown = false;
+  }
 }
 
 
