@@ -443,7 +443,23 @@
     
     <!-- Survey Button Wrapper -->
     <div id="surveyButtonWrapper" class="control-wrapper">
-      <a href="https://forms.gle/yYfmFiMMSeSCvUXp9" class="unified-btn" target="_blank">前往填寫問卷</a>
+      <a id="surveyLink" href="https://forms.gle/eeMvrk4uLJmXHHmRA" class="unified-btn" target="_blank">前往填寫問卷</a>
     </div>
+    
+    <script>
+      // 根據 URL 中的 g 參數設置問卷連結
+      document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const gParam = urlParams.get('g');
+        const surveyLink = document.getElementById('surveyLink');
+        
+        if (gParam === 'hed') {
+          surveyLink.href = 'https://forms.gle/NjYEGDdKKyXdng8z8';
+        } else {
+          // 若是 uti 或無 g 參數，使用預設連結
+          surveyLink.href = 'https://forms.gle/eeMvrk4uLJmXHHmRA';
+        }
+      });
+    </script>
   </body>
 </html>
