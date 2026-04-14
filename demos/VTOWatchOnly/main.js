@@ -118,37 +118,37 @@ const marqueeData = {
   // 2026/04/08 added
   'study05': {
     'v2026': {
-      'leather': 'study05/study05_comm_leather.json',
-      'happy': 'study05/study05_comm_happy.json',
-      'silver': 'study05/study05_comm_silver.json'
+      'leather': 'study05/study05_leather.json',
+      'happy': 'study05/study05_happy.json',
+      'silver': 'study05/study05_silver.json'
     }
   },
   'study05vn': {
     'v2026': {
-      'leather': 'study05/study05_comm_leather_vn.json',
-      'happy': 'study05/study05_comm_happy_vn.json',
-      'silver': 'study05/study05_comm_silver_vn.json'
+      'leather': 'study05/study05_leather_vn.json',
+      'happy': 'study05/study05_happy_vn.json',
+      'silver': 'study05/study05_silver_vn.json'
     }
   },
   'study06': {
     'v2026': {
-      'leather': 'study05/study05_comm_leather.json',
-      'happy': 'study05/study05_comm_happy.json',
-      'silver': 'study05/study05_comm_silver.json'
+      'leather': 'study06/study06_leather.json',
+      'happy': 'study06/study06_happy.json',
+      'silver': 'study06/study06_silver.json'
     }
   },
   'study07': {
     'v2026': {
-      'leather': 'study05/study05_comm_leather.json',
-      'happy': 'study05/study05_comm_happy.json',
-      'silver': 'study05/study05_comm_silver.json'
+      'leather': 'study07/study07_leather.json',
+      'happy': 'study07/study07_happy.json',
+      'silver': 'study07/study07_silver.json'
     }
   },
   'study08': {
     'v2026': {
-      'leather': 'study05/study05_comm_leather.json',
-      'happy': 'study05/study05_comm_happy.json',
-      'silver': 'study05/study05_comm_silver.json'
+      'leather': 'study08/study08_leather.json',
+      'happy': 'study08/study08_happy.json',
+      'silver': 'study08/study08_silver.json'
     }
   }
 }
@@ -631,6 +631,8 @@ function changeWatchColor(color) {
     
     // 更新按鈕狀態
     setActiveButton(document.getElementById(color));
+
+
   }
   
   // 取得網址參數

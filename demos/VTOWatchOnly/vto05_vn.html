@@ -147,13 +147,13 @@
         transform: translate(-50%, 0%) rotateY(180deg);
       }
 
-      /* 影片播放器樣式 */
+      /* 影片播放器樣式（以 33.33vw 為基礎，比例 720×1060） */
       #videoPlayer {
         position: fixed;
         top: 0;
         right: 0;
         width: 33.33vw;
-        height: 33.33vw; /* Changed to match width for square shape */
+        height: calc(33.33vw * 1060 / 720);
         z-index: 4;
         display: none;
         background: #000;
@@ -258,20 +258,20 @@
         transform: scale(0.95);
       }
 
-      /* 各個顏色按鈕 */
-      #gold {
-        background: linear-gradient(145deg, #817429, #6e6a50);
-        box-shadow: 0 4px 8px rgba(130, 116, 41, 0.3);
+      /* 錶款按鈕（玫瑰金-皮革錶帶） */
+      #leather {
+        background: linear-gradient(145deg, #f0d4cf, #c9959e 42%, #a56b72);
+        box-shadow: 0 4px 8px rgba(165, 107, 114, 0.35);
       }
-
-      #red {
-        background: linear-gradient(145deg, #722f37, #4a1f24);
-        box-shadow: 0 4px 8px rgba(114, 47, 55, 0.3);
-      }
-
-      #black {
+      /* 錶款按鈕（黑色-矽膠錶帶） */
+      #happy {
         background: linear-gradient(145deg, #333333, #000000);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+      /* 錶款按鈕（銀色-金屬錶帶） */
+      #silver {
+        background: linear-gradient(145deg, #f0f2f5, #b4bac2 42%, #858d96);
+        box-shadow: 0 4px 8px rgba(110, 118, 130, 0.35);
       }
 
       /* 跑馬燈樣式 */
@@ -406,7 +406,7 @@
     <!-- 影片播放器 -->
     <video id="videoPlayer" controls playsinline webkit-playsinline>
       <source type="video/mp4">
-      您的瀏覽器不支援影片播放器。
+      Trình duyệt của bạn không hỗ trợ trình phát video.
     </video>
 
     <!-- 跑馬燈文字 -->
