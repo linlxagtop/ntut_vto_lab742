@@ -117,35 +117,35 @@ const marqueeData = {
   },
   // 2026/04/08 added
   'study05': {
-    'comm': {
+    'v2026': {
       'leather': 'study05/study05_comm_leather.json',
       'happy': 'study05/study05_comm_happy.json',
       'silver': 'study05/study05_comm_silver.json'
     }
   },
   'study05vn': {
-    'comm': {
+    'v2026': {
       'leather': 'study05/study05_comm_leather_vn.json',
       'happy': 'study05/study05_comm_happy_vn.json',
       'silver': 'study05/study05_comm_silver_vn.json'
     }
   },
   'study06': {
-    'comm': {
+    'v2026': {
       'leather': 'study05/study05_comm_leather.json',
       'happy': 'study05/study05_comm_happy.json',
       'silver': 'study05/study05_comm_silver.json'
     }
   },
   'study07': {
-    'comm': {
+    'v2026': {
       'leather': 'study05/study05_comm_leather.json',
       'happy': 'study05/study05_comm_happy.json',
       'silver': 'study05/study05_comm_silver.json'
     }
   },
   'study08': {
-    'comm': {
+    'v2026': {
       'leather': 'study05/study05_comm_leather.json',
       'happy': 'study05/study05_comm_happy.json',
       'silver': 'study05/study05_comm_silver.json'

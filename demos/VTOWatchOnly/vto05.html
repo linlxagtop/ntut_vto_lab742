@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="content-language" content="en-EN" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+
+    <title>DW WATCH VTO STUDY</title>
+    
+    <!-- INCLUDE WEBARROCKSHAND SCRIPT -->
+    <script src="../../dist/WebARRocksHand.js"></script>
+    <!-- <script src="../../../../HandTracker.php"></script> -->
+
+    
+    <!-- THREE.JS - REPLACE IT BY three.min.js FOR PROD -->
+    <script src="../../libs/three/v136/build/three.js"></script>
+
+    <!-- THREE.JS EXTENSIONS -->
+    <script src="../../libs/three/v136/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="../../libs/three/v136/examples/js/loaders/RGBELoader.js"></script>
+
+    <!-- WEBARROCKSHAND THREEJS VTO HELPER -->
+    <script src="../../helpers/HandTrackerThreeHelper.js"></script>
+
+    <!-- change camera helper -->
+    <script src="../../helpers/ChangeCameraHelper.js"></script>
+    
+
+    <!-- WEBARROCKSHAND POINTS STABILIZER -->
+    <script src="../../helpers/landmarksStabilizers/OneEuroLMStabilizer.js"></script>
+
+     <!-- POSEFLIP FILTER -->
+    <script src="../../helpers/PoseFlipFilter.js"></script>
+    
+    <!-- INCLUDE MAIN DEMO SCRIPT -->
+    <script src="./main.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+    <!-- Material Icons & Material Button CSS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+      /* 統一按鈕樣式 */
+      .unified-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: #1976d2;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        font-family: 'Roboto', sans-serif;
+        box-shadow: 0 2px 4px rgba(25, 118, 210, 0.2);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        font-weight: 600;
+        text-align: center;
+        width: 100%;
+        padding: 10px 16px;
+        font-size: 14px;
+        min-width: 100px;
+      }
+      
+      .unified-btn:hover {
+        background: #1565c0;
+        box-shadow: 0 4px 8px rgba(25, 118, 210, 0.3);
+        transform: translateY(-2px);
+      }
+      
+      .unified-btn .material-icons {
+        font-size: 18px;
+      }
+      
+      /* 共用容器樣式 */
+      .control-wrapper {
+        position: fixed;
+        z-index: 1000;
+        width: 100px;
+        display: none; /* Initially hidden */
+      }
+      
+      /* 切換鏡頭按鈕容器 */
+      #changeCameraWrapper {
+        top: 20px;
+        left: 20px;
+      }
+      
+      /* 倒數計時器容器 */
+      #countdownTimerWrapper {
+        top: 80px; /* changeCameraWrapper下方20px */
+        left: 20px;
+      }
+      
+      /* 問卷按鈕容器 */
+      #surveyButtonWrapper {
+        top: 80px; /* 與countdownTimerWrapper相同位置 */
+        left: 20px;
+      }
+
+      @media (max-width: 768px) { 
+        /* 切換鏡頭按鈕容器 */
+        #changeCameraWrapper {
+          top: 10px;
+          left: 10px;
+        }
+        
+        /* 倒數計時器容器 */
+        #countdownTimerWrapper {
+          top: 60px; /* changeCameraWrapper下方20px */
+          left: 10px;
+        }
+        
+        /* 問卷按鈕容器 */
+        #surveyButtonWrapper {
+          top: 60px; /* 與countdownTimerWrapper相同位置 */
+          left: 10px;
+        }
+      }
+    </style>
+
+
+    <style type='text/css'>
+      body {
+        background-color: #333;
+        margin: 0;
+        overflow: hidden;
+        font-family: 'Roboto', sans-serif;
+      }
+      canvas {
+        position: fixed;
+        top: 0;
+        /*left: 0;
+        width: 100vw*/
+        height: 100vh;
+      }
+      #handTrackerCanvas {
+        z-index: 1;
+      }
+      #VTOCanvas {
+        z-index: 2;
+      }
+      canvas {
+        /* mirror the canvas - useful if camera is in selfie mode only: */
+        left: 50%;
+        transform: translate(-50%, 0%) rotateY(180deg);
+      }
+
+      /* 影片播放器樣式 */
+      #videoPlayer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 33.33vw;
+        height: 33.33vw; /* Changed to match width for square shape */
+        z-index: 4;
+        display: none;
+        background: #000;
+        object-fit: contain;
+      }
+
+      .modal {
+        display: flex; 
+        flex-direction: column;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        transition-duration: 500ms;
+        position: fixed;
+      }
+
+      #loading {
+        background: #1c3e83;
+        color: white;
+        opacity: 1;
+        z-index: 10;
+      }
+      #loading > div {
+        margin: auto;
+        font-size: 14px;
+      }
+
+      #instructions {
+        z-index: 9;
+        background-color: rgba(0,0,0,0.5);
+        color: white;
+        font-size: 14px;
+      }
+      #instructions > div {
+        margin: auto;
+        text-align: center;
+        line-height: 1.5em;
+      }
+      .instructionsOK {
+        border: 1px solid white;
+        background: transparent;
+        color: white;
+        font-size: 14px;
+        padding: 22px;
+        margin: 1em;
+        cursor: pointer;
+        width: 200px;
+      }
+      .instructionsImg {
+        margin-top: 12px;
+        max-height: 50vh;
+        max-width: 50vw;
+      }
+
+      /* #changeCamera 样式由 .mui-btn 覆蓋，保留以防其他依赖 */
+      #changeCamera {
+        z-index: 1000;
+      }
+
+      /* 顏色選擇按鈕容器 */
+      .color-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        z-index: 100;
+      }
+
+      /* 顏色按鈕樣式 */
+      .color-button {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* 按鈕外圈效果 */
+      .color-button::after {
+        content: '';
+        position: absolute;
+        top: -4px;
+        left: -4px;
+        right: -4px;
+        bottom: -4px;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+      }
+
+      /* 選中狀態 */
+      .color-button.active::after {
+        border-color: white;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      }
+
+      /* 觸摸反饋 */
+      .color-button:active {
+        transform: scale(0.95);
+      }
+
+      /* 各個顏色按鈕 */
+      #gold {
+        background: linear-gradient(145deg, #817429, #6e6a50);
+        box-shadow: 0 4px 8px rgba(130, 116, 41, 0.3);
+      }
+
+      #red {
+        background: linear-gradient(145deg, #722f37, #4a1f24);
+        box-shadow: 0 4px 8px rgba(114, 47, 55, 0.3);
+      }
+
+      #black {
+        background: linear-gradient(145deg, #333333, #000000);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      /* 跑馬燈樣式 */
+      #scrollingText {
+        color: #fff;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 10px;
+        margin: 10px auto;
+        border-radius: 5px;
+        display: none;
+        position: fixed;
+        bottom: 160px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        max-width: 600px;
+        text-align: center;
+        z-index: 99;
+        /* 允許多行換行與自動高度 */
+        white-space: pre-line;
+        word-break: break-all;
+        height: auto;
+        min-height: 1.5em;
+        line-height: 1.5;
+        overflow: visible;
+        font-size: 14px;
+      }
+      
+      /* 組合式描述與按鈕容器 */
+      .description-buttons-container {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        max-width: 600px;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 20px;
+        padding: 15px;
+        backdrop-filter: blur(5px);
+        z-index: 98;
+        display: none; /* 預設隱藏整個容器 */
+      }
+      
+      /* 手錶描述樣式 */
+      #watchDescription {
+        color: #fff;
+        padding: 5px 0;
+        margin-bottom: 10px;
+        width: 100%;
+        font-size: 14px;
+        line-height: 1.6;
+        height: 1.6em;
+        white-space: nowrap;
+        overflow-x: hidden;
+        display: none; /* 預設隱藏 */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      
+      /* 手錶描述水平滑動動畫 - 從右到左，立即開始 */
+      @keyframes textScrollRightToLeft {
+        0% {
+          transform: translateX(0); /* 一開始就顯示在可見範圍內 */
+        }
+        10% { /* 停留一段時間方便閱讀 */
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
+      }
+      
+      #watchDescription .scrolling-content {
+        display: inline-block;
+        white-space: nowrap;
+        animation: textScrollRightToLeft 30s linear infinite; /* 動畫時間增加一倍，速度減慢一半 */
+        padding-right: 50px; /* 增加右側空間，避免文字一開始就超出可見範圍 */
+      }
+      .marquee {
+        display: block;
+        animation: none;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+      .marquee.animate {
+        opacity: 1;
+        animation: scrollUp 1s ease-out;
+      }
+      @keyframes scrollUp {
+        0% {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+        20% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+
+    <div id='canvases'>
+      <!-- Canvas displayed above, with the THREE.js scene -->
+      <canvas id='VTOCanvas'></canvas>
+
+      <!-- Canvas used by the hand tracker and displaying the video -->
+      <canvas id='handTrackerCanvas'></canvas>
+    </div>
+
+    <!-- loading modal: -->
+    <div id='loading' class='modal'>
+      <div>
+        LOADING...
+      </div>
+    </div>
+
+    <!-- instructions: -->
+    <div id='instructions' class='modal'>
+      <div>
+        <p style="font-size: 20pt;">請垂直舉起您的手腕並張開手掌</p>
+        系統將偵測手腕位置，進行AR手錶穿戴<br/>
+        <img src='assets/VTOWristGuidline500px.png' class="instructionsImg" /><br/>
+        <!-- OK 按鈕，暫時不需顯示，予以隱藏 -->
+        <button class='instructionsOK' onclick="hide_instructions()" style="display: none;">OK</button>
+      </div>
+    </div>
+
+    <!-- 影片播放器 -->
+    <video id="videoPlayer" controls playsinline webkit-playsinline>
+      <source type="video/mp4">
+      您的瀏覽器不支援影片播放器。
+    </video>
+
+    <!-- 跑馬燈文字 -->
+    <div id="scrollingText">
+      <div class="marquee"></div>
+    </div>
+
+    <!-- 組合式描述與按鈕容器 -->
+    <div class="description-buttons-container">
+      <!-- 手錶描述文字 -->
+      <div id="watchDescription">
+        <div class="scrolling-content"></div>
+      </div>
+
+      <!-- 顏色選擇按鈕 -->
+      <div class="color-buttons">
+        <button id="leather" class="color-button active" onclick="changeWatchColor('leather')"></button>
+        <button id="happy" class="color-button" onclick="changeWatchColor('happy')"></button>
+        <button id="silver" class="color-button" onclick="changeWatchColor('silver')"></button>
+      </div>
+    </div>
+
+    <!-- Wrapper div for changeCamera button -->
+    <div id="changeCameraWrapper" class="control-wrapper">
+      <div class="unified-btn" onclick="change_camera()">
+        <span class="material-icons">flip_camera_android</span>
+        切換鏡頭
+      </div>
+    </div>
+    
+    <!-- Countdown Timer Wrapper -->
+    <div id="countdownTimerWrapper" class="control-wrapper">
+      <div id="countdownTimer" class="unified-btn">實驗時間 01:00</div>
+    </div>
+    
+    <!-- Survey Button Wrapper -->
+    <div id="surveyButtonWrapper" class="control-wrapper">
+      <a href="https://2057.api.gosu.bar/customize/SurveyF036toF039?from=study2b" class="unified-btn" target="_blank">前往填寫問卷</a>
+    </div>
+  </body>
+</html>
