@@ -70,9 +70,12 @@ const _settings = {
     'black': 'assets/watchDw_black_low.glb'
   },
   watchModelsMaterials: {
-    'leather': 'assets/watchDw_leather.glb',
-    'happy': 'assets/watchDw_happy.glb',
-    'silver': 'assets/watchDw_silver.glb'
+  //  'leather': 'assets/watchDw_leather.glb',
+  //  'happy': 'assets/watchDw_happy.glb',
+  //  'silver': 'assets/watchDw_silver.glb'
+    'leather': 'assets/watchDw_gold.glb',
+    'happy': 'assets/watchDw_black.glb',
+    'silver': 'assets/watchDw_red.glb'
   },
   currentWatchColor: 'gold' // 預設款式
 };
@@ -157,7 +160,8 @@ const videoData = {
     'ClassicAuburn_High', 'ClassicAuburn_Low',
     'ClassicCanterbury_High', 'ClassicCanterbury_Low',
     'ClassicGlasgow_High', 'ClassicGlasgow_Low',
-    'Welcome_High', 'Welcome_Low'
+    'Welcome_High', 'Welcome_Low',
+    'ClassicStMawes_leather', 'ClassicSheffield_happy', 'Petite_silver'
   ],
   // 預設影片組
   comm: {
@@ -190,7 +194,7 @@ const videoData = {
   },
   // 2026 scenario avatar videos
   attention: {
-    leather: 'ClassicSt.Mawes_leather',
+    leather: 'ClassicStMawes_leather',
     happy: 'ClassicSheffield_happy',
     silver: 'Petite_silver'
   },
@@ -721,7 +725,7 @@ function handleUrlParameters() {
   const urlParams = new URLSearchParams(window.location.search);
   
   // 處理3D模型資源參數 res
-  const resource = urlParams.get('res');
+  var resource = urlParams.get('res');
   // 根據resource參數選擇使用哪個模型集合
   if(resource === 'low') {
     currentModelSet = _settings.watchModelsLow;
