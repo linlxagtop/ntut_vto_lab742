@@ -77,7 +77,7 @@ const _settings = {
     'happy': 'assets/watchDw_black.glb',
     'silver': 'assets/watchDw_red.glb'
   },
-  currentWatchColor: 'gold' // 預設款式
+  currentWatchColor: 'leather' // 預設款式
 };
 
 // Marquee JSON Data
@@ -459,10 +459,10 @@ function hide_instructions(){
       descriptionContainer.style.display = 'block';
     }
     // 確保挑色選項按鈕顯示，並設定 gold 按鈕預設被選中
-    setActiveButton(document.getElementById('gold'));
+    setActiveButton(document.getElementById('leather'));
     _isWatchDescriptionShown = true;
     // 只有study01和study02才顯示手錶描述
-    if ((currentStudy=='study01' || currentStudy=='study02') && watchDescription && currentWatchDescription) {
+    if ((currentStudy=='study01' || currentStudy=='study02' || currentStudy=='study05' || currentStudy=='study05vn' || currentStudy=='study06' || currentStudy=='study07' || currentStudy=='study08') && watchDescription && currentWatchDescription) {
       watchDescription.style.display = 'block';
     }
   }
