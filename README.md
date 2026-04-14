@@ -26,7 +26,7 @@ This is a research project focused on Virtual Try-On (VTO) and avatar experiment
   * Velociraptor demo with persistency if hand tracking is lost: [live demo](https://webar.rocks/demos/hand/demos/objectManip4/), [source code](/demos/objectManip4)
 
 * 3D Model:
-  * Watch: [live demo](https://ntut_vto_lab742.zeabur.app/demos/VTOWatchOnly/index.html), [source code](/dev/model3D/watchDw/)
+  * Watch: [live demo](https://ntut_vto.zeabur.app/demos/VTOWatchOnly/index.html), [source code](/dev/model3D/watchDw/)
 
 ## Hosting
 

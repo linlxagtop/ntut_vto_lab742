@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daniel Wellington - Classic Series</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Noto Sans TC', sans-serif;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+        .header {
+            background-color: #d1d1d1;
+            text-align: center;
+            padding: 40px 0;
+        }
+        .header h1 {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 5px;
+        }
+        .product-section {
+            margin-bottom: 60px;
+            background-color: #fff;
+        }
+        .product-container {
+            display: flex;
+            flex-direction: row;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .product-images {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+        .main-image {
+            width: 100%;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .main-image img {
+            width: 100%;
+            aspect-ratio: 1/1;
+        }
+        .side-images {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            justify-content: space-between;
+        }
+        .product-images img {
+            height: auto;
+            display: block;
+            border: none;
+            object-fit: cover;
+        }
+        .side-images img {
+            width: calc(50% - 10px);
+            aspect-ratio: 1/1;
+        }
+        .product-info {
+            flex: 1;
+            padding: 40px;
+        }
+        .product-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            font-weight: 700;
+            margin: 0 0 20px;
+            color: #222;
+        }
+        .product-description {
+            font-size: 16px;
+            line-height: 1.8;
+            margin: 0 0 30px;
+        }
+        .color-options {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .color-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .color-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .color-rose-gold {
+            background-color: #c9a088;
+        }
+        .color-black {
+            background-color: #000;
+        }
+        .color-silver {
+            background-color: #c0c0c0;
+        }
+        .product-details {
+            font-size: 18px;
+            margin-top: 30px;
+        }
+        .price {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        .currency {
+            font-size: 18px;
+            font-weight: normal;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .product-container {
+                flex-direction: column;
+                padding: 15px;
+            }
+            .product-info {
+                order: -1; /* Move product info to the top on mobile */
+                padding: 30px 20px;
+            }
+            .product-images {
+                padding: 15px;
+                max-width: 100%;
+            }
+            .main-image {
+                margin-bottom: 15px;
+            }
+            .side-images {
+                gap: 15px;
+            }
+            .side-images img {
+                width: calc(50% - 7.5px);
+            }
+            .product-title {
+                font-size: 32px;
+            }
+            .header h1 {
+                font-size: 36px;
+            }
+        }
+        
+        /* Survey Button */
+        .survey-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #4285f4, #0d47a1);
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            border-radius: 30px;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        .survey-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+        }
+        
+        @media (max-width: 768px) {
+            .survey-button {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>DANIEL WELLINGTON</h1>
+    </div>
+
+    <!-- Product Section 1 -->
+    <div class="product-section">
+        <div class="product-container">
+            <div class="product-images">
+                <div class="main-image">
+                    <img src="../assets/img/res_leather_100.jpg" alt="A rose gold watch with a black, white, and red striped strap">
+                </div>
+                <div class="side-images">
+                    <img src="../assets/img/res_happy_100.jpg" alt="A black watch with a black and white striped strap">
+                    <img src="../assets/img/res_silver_100.jpg" alt="A silver watch with a black and orange striped strap">
+                </div>
+            </div>
+            <div class="product-info">
+                <h2 class="product-title">DANIEL WELLINGTON</h2>
+                <p class="product-description">
+                    Dễ phối đồ, phù hợp hàng ngày. Một minh chứng hoàn hảo cho phong cách thời trang tối giản với nhiều lựa chọn dây đeo cổ điển, thuần khiết và thanh lịch. Chiếc đồng hồ này sẽ nâng tầm trang phục, tâm trạng và tinh thần mỗi ngày của bạn.
+                </p>
+                <div class="color-options">
+                    <div class="color-option">
+                        <div class="color-circle color-rose-gold"></div>
+                        <span>- Vàng hồng</span>
+                    </div>
+                    <div class="color-option">
+                        <div class="color-circle color-black"></div>
+                        <span>- Màu đen</span>
+                    </div>
+                    <div class="color-option">
+                        <div class="color-circle color-silver"></div>
+                        <span>- màu bạc</span>
+                    </div>
+                </div>
+                <div class="product-details">
+                    <div>Đường kính mặt - 36mm</div>
+                    <div class="price"> <span class="currency">VND</span> 1,650,000 </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Section 2 -->
+    <div class="product-section">
+        <div class="product-container">
+            <div class="product-images">
+                <div class="main-image">
+                    <img src="../assets/img/res_leather_100.jpg" alt="A rose gold watch with a leather strap">
+                </div>
+                <div class="side-images">
+                    <img src="../assets/img/res_leather_600_01.jpg" alt="A close-up of the watch face">
+                    <img src="../assets/img/res_leather_600_02.jpg" alt="The watch from another angle">
+                </div>
+            </div>
+            <div class="product-info">
+                <h2 class="product-title">Classic St. Mawes</h2>
+                <p class="product-description">
+                    <strong>Classic St. Mawes</strong>
+                    Mẫu đồng hồ Daniel Wellington Classic St. Mawes được thiết kế với khung viền màu vàng hồng kết hợp cùng mặt đồng hồ tròn màu trắng tối giản, hòa quyện giữa phong cách cổ điển và hiện đại, mang lại vẻ đẹp thanh lịch, ấm áp và tinh tế. Dây đeo được làm từ da thật màu nâu mềm mại; mặt đồng hồ thiết kế tối giản với vỏ siêu mỏng 6mm và đường kính 36mm, tạo cảm giác thanh thoát, ôm sát cổ tay, nâng cao sự thoải mái khi đeo và tính thẩm mỹ tổng thể. Phù hợp cho các buổi gặp gỡ trang trọng, đi làm hằng ngày hoặc các dịp thường ngày. 
+                </p>
+                <div class="color-options">
+                    <div class="color-option">
+                        <div class="color-circle color-rose-gold"></div>
+                        <span>- Vàng hồng</span>
+                    </div>
+                </div>
+                <div class="product-details">
+                    <div>Đường kính mặt - 36mm</div>
+                    <div class="price"> <span class="currency">VND</span> 1,650,000 </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Section 3 -->
+    <div class="product-section">
+        <div class="product-container">
+            <div class="product-images">
+                <div class="main-image">
+                    <img src="../assets/img/res_happy_100.jpg" alt="A gold watch with a mesh strap">
+                </div>
+                <div class="side-images">
+                    <img src="../assets/img/res_happy_600_01.jpg" alt="Side view of the gold watch">
+                    <img src="../assets/img/res_happy_600_02.jpg" alt="Close-up of the mesh strap">
+                </div>
+            </div>
+            <div class="product-info">
+                <h2 class="product-title">Classic Sheffield</h2>
+                <p class="product-description">
+                    <strong>Classic Sheffield</strong>
+                    Mẫu Daniel Wellington Classic Sheffield sử dụng dây da thật màu đen kết hợp với khung viền thép không gỉ màu bạc, thể hiện phong cách gọn gàng và tự tin. Đường kính mặt 36mm cùng vỏ siêu mỏng 6mm mang đến phong cách trung tính và hiện đại. Mặt đồng hồ đen phối cùng kim loại bạc tạo chiều sâu thị giác dưới nhiều điều kiện ánh sáng, vừa thực dụng vừa bền đẹp. Dây da mềm mại, ôm tay, kết cấu tinh tế tạo nên vẻ ngoài vừa chững chạc vừa cao cấp, thể hiện trọn vẹn sự tinh xảo và thanh lịch đặc trưng của thương hiệu. Phù hợp cho môi trường công sở, các dịp trang trọng hoặc đi làm hằng ngày.
+                </p>
+                <div class="color-options">
+                    <div class="color-option">
+                        <div class="color-circle" style="background-color: #000000;"></div>
+                        <span>- Màu đen</span>
+                    </div>
+                </div>
+                <div class="product-details">
+                    <div>Đường kính mặt - 36mm</div>
+                    <div class="price"> <span class="currency">VND</span> 1,650,000 </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Section 4 -->
+    <div class="product-section">
+        <div class="product-container">
+            <div class="product-images">
+                <div class="main-image">
+                    <img src="../assets/img/res_silver_100.jpg" alt="A minimalist watch with a white face">
+                </div>
+                <div class="side-images">
+                    <img src="../assets/img/res_silver_600_01.jpg" alt="The watch with a brown leather strap">
+                    <img src="../assets/img/res_silver_600_02.jpg" alt="The watch with a black leather strap">
+                </div>
+            </div>
+            <div class="product-info">
+                <h2 class="product-title">Petite</h2>
+                <p class="product-description">
+                    <strong>Petite</strong>
+                    Mẫu Daniel Wellington Petite Sterling sử dụng dây kim loại Milan màu bạc, với thiết kế vỏ siêu mỏng 6mm và mặt đồng hồ 36mm, mang lại cảm giác nhẹ nhàng, thoáng khí và không gây bí khi đeo. Mặt đồng hồ màu trắng tỏa ánh sáng dịu nhẹ, kết hợp với dây kim loại đan tinh tế, tạo nên vẻ ngoài gọn gàng và thanh lịch, dung hòa hoàn hảo giữa phong cách tối giản cổ điển và nét hiện đại trẻ trung. Phù hợp cho đi làm, gặp gỡ bạn bè và sử dụng hằng ngày; trong mọi hoàn cảnh, mẫu đồng hồ này đều giúp bạn thể hiện phong cách tự tin và cá tính riêng.
+                </p>
+                <div class="color-options">
+                    <div class="color-option">
+                        <div class="color-circle color-silver"></div>
+                        <span>- màu bạc</span>
+                    </div>
+                </div>
+                <div class="product-details">
+                    <div>Đường kính mặt - 36mm</div>
+                    <div class="price"> <span class="currency">VND</span> 1,650,000 </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Survey Button -->
+    <a href="https://2057.api.gosu.bar/customize/SurveyF036toF039?from=study2a" class="survey-button" target="_blank">Chuyển đến bảng câu hỏi</a>   
+</body>
+</html>

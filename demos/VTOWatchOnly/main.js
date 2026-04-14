@@ -69,6 +69,11 @@ const _settings = {
     'red': 'assets/watchDw_red_low.glb',
     'black': 'assets/watchDw_black_low.glb'
   },
+  watchModelsMaterials: {
+    'leather': 'assets/watchDw_leather.glb',
+    'happy': 'assets/watchDw_happy.glb',
+    'silver': 'assets/watchDw_silver.glb'
+  },
   currentWatchColor: 'gold' // 預設款式
 };
 
@@ -106,6 +111,42 @@ const marqueeData = {
       'gold': 'study04/study04_comm_gold.json',
       'red': 'study04/study04_comm_red.json'
     }
+  },
+  // 2026/04/08 added
+  'study05': {
+    'comm': {
+      'leather': 'study05/study05_comm_leather.json',
+      'happy': 'study05/study05_comm_happy.json',
+      'silver': 'study05/study05_comm_silver.json'
+    }
+  },
+  'study05vn': {
+    'comm': {
+      'leather': 'study05/study05_comm_leather_vn.json',
+      'happy': 'study05/study05_comm_happy_vn.json',
+      'silver': 'study05/study05_comm_silver_vn.json'
+    }
+  },
+  'study06': {
+    'comm': {
+      'leather': 'study05/study05_comm_leather.json',
+      'happy': 'study05/study05_comm_happy.json',
+      'silver': 'study05/study05_comm_silver.json'
+    }
+  },
+  'study07': {
+    'comm': {
+      'leather': 'study05/study05_comm_leather.json',
+      'happy': 'study05/study05_comm_happy.json',
+      'silver': 'study05/study05_comm_silver.json'
+    }
+  },
+  'study08': {
+    'comm': {
+      'leather': 'study05/study05_comm_leather.json',
+      'happy': 'study05/study05_comm_happy.json',
+      'silver': 'study05/study05_comm_silver.json'
+    }
   }
 }
 
@@ -136,7 +177,7 @@ const videoData = {
     black: 'ClassicGlasgow_Low',
     gold: 'ClassicAuburn_Low'
   },
-  // 其他研究版本的影片組
+  // uti,hed等其他研究版本的影片組
   uti: {
     red: 'ClassicCanterbury_High',
     black: 'ClassicGlasgow_High',
@@ -146,6 +187,12 @@ const videoData = {
     red: 'ClassicCanterbury_High',
     black: 'ClassicGlasgow_High',
     gold: 'ClassicAuburn_High'
+  },
+  // 2026 scenario avatar videos
+  attention: {
+    leather: 'ClassicSt.Mawes_leather',
+    happy: 'ClassicSheffield_happy',
+    silver: 'Petite_silver'
   },
   // 預設影片
   default: 'Welcome_High'
@@ -590,8 +637,8 @@ function changeWatchColor(color) {
   const currentStudy = _settings.currentStudy || 'study01';
   
   // 檢查研究版本參數
-  if (studyParam === '1' || studyParam === '2') {
-    // 若 s 參數是 1 或 2，才需要 scrollingText 和 WatchDescription
+  if (studyParam === '1' || studyParam === '2' || studyParam === '5' || studyParam === '5vn' || studyParam === '6' || studyParam === '7' || studyParam === '8') {
+    // 若 s 參數是上述 study 情境，才需要 scrollingText 和 WatchDescription
     
     // 若 g 參數與 color 都存在於 marqueeData 中
     if (gParam && marqueeData[currentStudy] && marqueeData[currentStudy][gParam] && marqueeData[currentStudy][gParam][color]) {
@@ -627,7 +674,7 @@ function changeWatchColor(color) {
     
     // 播放對應的影片
     playVideo(videoId);
-  }
+  } 
 }
 
 // 將 changeWatchColor 函數添加到 window 對象，使其可以從 HTML 中調用
@@ -673,23 +720,32 @@ window.playVideo = playVideo;
 function handleUrlParameters() {
   const urlParams = new URLSearchParams(window.location.search);
   
-  // 處理3D模型解析度參數 res
-  const resolution = urlParams.get('res');
-  // 根據resolution參數選擇使用哪個模型集合
-  currentModelSet = (resolution === 'low') ? _settings.watchModelsLow : _settings.watchModels;
-  _settings.modelScale = (resolution === 'low') ? 3.5 : 1.3 * 1.462;
+  // 處理3D模型資源參數 res
+  const resource = urlParams.get('res');
+  // 根據resource參數選擇使用哪個模型集合
+  if(resource === 'low') {
+    currentModelSet = _settings.watchModelsLow;
+    _settings.modelScale = 3.5;
+  }  else if(resource === 'materials') {
+    currentModelSet = _settings.watchModelsMaterials;
+    _settings.modelScale = 1.3 * 1.462;
+  } else {
+    resource = 'high';
+    currentModelSet = _settings.watchModels;
+    _settings.modelScale = 1.3 * 1.462;
+  }
   
-  // 更新初始模型URL為相應解析度的模型
+  // 更新初始模型URL為相應材質資源的模型
   _settings.modelURL = currentModelSet[_settings.currentWatchColor];
   console.log('Initial model URL set to:', _settings.modelURL);
-  console.log('Using model set:', resolution === 'low' ? 'low resolution' : 'high resolution');
+  console.log('Using model set: ', resource);
 
   // 處理研究版本參數 s
   const studyParam = urlParams.get('s');
   let gParam = urlParams.get('g'); // 例如 'uti' 或 'hed'或 'comm'
   let commentId = urlParams.get('c');
   
-  // 設定研究版本 (從study01到study04)
+  // 設定研究版本 (從study01到studyXX)
   if (studyParam === '1') {
     _settings.currentStudy = 'study01';
   } else if (studyParam === '2') {
@@ -698,6 +754,16 @@ function handleUrlParameters() {
     _settings.currentStudy = 'study03';
   } else if (studyParam === '4') {
     _settings.currentStudy = 'study04';
+  } else if (studyParam === '5') {
+    _settings.currentStudy = 'study05';
+  } else if (studyParam === '5vn') {
+    _settings.currentStudy = 'study05vn';
+  } else if (studyParam === '6') {
+    _settings.currentStudy = 'study06';
+  } else if (studyParam === '7') {
+    _settings.currentStudy = 'study07';
+  } else if (studyParam === '8') {
+    _settings.currentStudy = 'study08';
   } else {
     _settings.currentStudy = 'study01'; // 預設使用study01
   }
@@ -706,7 +772,7 @@ function handleUrlParameters() {
   _settings.marqueeState = commentId ? commentId : null;
   
   // 載入初始手錶描述
-  if ((studyParam === '1' || studyParam === '2') && gParam) {
+  if ((studyParam === '1' || studyParam === '2' || studyParam === '5' || studyParam === '5vn') && gParam) {
     loadWatchDescription(_settings.currentStudy, gParam, _settings.currentWatchColor);
   }
   
