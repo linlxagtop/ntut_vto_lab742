@@ -193,7 +193,7 @@ const videoData = {
     gold: 'ClassicAuburn_High'
   },
   // 2026 scenario avatar videos
-  attention: {
+  v2026: {
     leather: 'ClassicStMawes_leather',
     happy: 'ClassicSheffield_happy',
     silver: 'Petite_silver'
@@ -692,7 +692,7 @@ function playVideo(videoId = 'Welcome_High') {
     const validVideoId = videoData.availableVideos.includes(videoId) ? videoId : videoData.default;
     
     // 設置影片來源並加載
-    videoPlayer.src = `https://video.zeabur.app/${validVideoId}.mp4`;
+    videoPlayer.src = `https://ntut-vto-video.zeabur.app/${validVideoId}.mp4`;
     videoPlayer.load();
     
     // 確保影片屬性設置正確
@@ -746,7 +746,7 @@ function handleUrlParameters() {
 
   // 處理研究版本參數 s
   const studyParam = urlParams.get('s');
-  let gParam = urlParams.get('g'); // 例如 'uti' 或 'hed'或 'comm'
+  let gParam = urlParams.get('g'); // 例如 'uti' 或 'hed' 或 'comm' 或 'v2026'
   let commentId = urlParams.get('c');
   
   // 設定研究版本 (從study01到studyXX)
@@ -791,8 +791,8 @@ function handleUrlParameters() {
     const gParam = urlParams.get('g');
     const studyParam = urlParams.get('s');
     
-    // 只有當 s=3 或 s=4 且有 gParam 參數時，才根據 videoData 選擇影片
-    if ((studyParam === '3' || studyParam === '4') && gParam && videoData[gParam]) {
+    // 只有當 s=3-8  且有 gParam 參數時，才根據 videoData 選擇影片
+    if ((studyParam === '3' || studyParam === '4' || studyParam === '5' || studyParam === '5vn' || studyParam === '6' || studyParam === '7' || studyParam === '8') && gParam && videoData[gParam]) {
       const color = _settings.currentWatchColor || 'gold'; // 預設為 gold
       
       if (videoData[gParam][color]) {
