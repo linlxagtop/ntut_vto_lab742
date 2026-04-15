@@ -525,6 +525,7 @@ let _isWatchDescriptionShown = false;
 let _isCountdownStarted = false;
 let _countdownInterval = null;
 
+// call by main()
 function callbackTrack(detectState){
   if (detectState.isDetected) {
     if (!_isInstructionsHidden){
@@ -648,9 +649,10 @@ function changeWatchColor(color) {
   // 使用當前研究版本 (從handleUrlParameters中獲取)
   const currentStudy = _settings.currentStudy || 'study01';
   
-  // 檢查研究版本參數
-  if (studyParam === '1' || studyParam === '2' || studyParam === '5' || studyParam === '5vn' || studyParam === '6' || studyParam === '7' || studyParam === '8' || studyParam === '9') {
-    // 若 s 參數是上述 study 情境，才需要 scrollingText 和 WatchDescription
+  // 檢查study參數，若 s 參數是上述 study 情境，才需要 scrollingText 和 WatchDescription
+  if (studyParam === '1' || studyParam === '2' || 
+    studyParam === '5' || studyParam === '5vn' || 
+    studyParam === '6' || studyParam === '7' || studyParam === '8') {
     
     // 若 g 參數與 color 都存在於 marqueeData 中
     if (gParam && marqueeData[currentStudy] && marqueeData[currentStudy][gParam] && marqueeData[currentStudy][gParam][color]) {
@@ -674,8 +676,9 @@ function changeWatchColor(color) {
     // 載入手錶描述
     loadWatchDescription(currentStudy, gParam, color);
   } 
-  else if (studyParam === '3' || studyParam === '4' || studyParam === '7' || studyParam === '8' || studyParam === '9') {
-    // 若 s 參數是 3 或 4，需要依照點選 color 更新 videoId 以播放不同影片
+
+  // 若 s 參數是 3 或 4，需要依照點選 color 更新 videoId 以播放不同影片
+  if (studyParam === '3' || studyParam === '4' || studyParam === '7' || studyParam === '8' || studyParam === '9') {
     // 根據 gParam 和 color 取得對應的影片 ID
     let videoId;
     if (videoData[gParam] && videoData[gParam][color]) {
@@ -687,6 +690,15 @@ function changeWatchColor(color) {
     // 播放對應的影片
     playVideo(videoId);
   } 
+  // 不需要影片
+  else{
+    const videoPlayer = document.getElementById('videoPlayer');
+    if (videoPlayer) {
+      // 隱藏影片播放器
+      videoPlayer.style.display = 'none';
+      _isVideoStarted = false;
+    }
+  }
 }
 
 // 將 changeWatchColor 函數添加到 window 對象，使其可以從 HTML 中調用
@@ -776,7 +788,9 @@ function handleUrlParameters() {
     _settings.currentStudy = 'study07';
   } else if (studyParam === '8') {
     _settings.currentStudy = 'study08';
-  } else {
+  } else if (studyParam === '9') {
+    _settings.currentStudy = 'study09';
+  }  else {
     _settings.currentStudy = 'study01'; // 預設使用study01
   }
   
