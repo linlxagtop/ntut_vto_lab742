@@ -551,7 +551,34 @@ function callbackTrack(detectState){
         });
       }, 1000);
     }
-    
+    const gParam = urlParams.get('g'); // 例如 'uti' 或 'hed'
+    const studyParam = urlParams.get('s'); // 研究版本參數
+    // 使用當前研究版本 (從handleUrlParameters中獲取)
+    const currentStudy = _settings.currentStudy || 'study01';
+
+    // 若 s 參數是 3 或 4，需要依照點選 color 更新 videoId 以播放不同影片
+    if (studyParam === '3' || studyParam === '4' || studyParam === '7' || studyParam === '8' || studyParam === '9') {
+      // 根據 gParam 和 color 取得對應的影片 ID
+      let videoId;
+      if (videoData[gParam] && videoData[gParam][color]) {
+        videoId = videoData[gParam][color];
+      } else {
+        videoId = videoData.default;
+      }
+      
+      // 播放對應的影片
+      playVideo(videoId);
+    } 
+    // 不需要影片
+    else{
+      const videoPlayer = document.getElementById('videoPlayer');
+      if (videoPlayer) {
+        // 隱藏影片播放器
+        videoPlayer.style.display = 'none';
+        _isVideoStarted = false;
+      }
+    }
+
     // 手錶描述顯示處理（只在第一次觸發時顯示）
     if (!_isWatchDescriptionShown) {
       const watchDescription = document.getElementById('watchDescription');
@@ -638,8 +665,6 @@ function changeWatchColor(color) {
     
     // 更新按鈕狀態
     setActiveButton(document.getElementById(color));
-
-
   }
   
   // 取得網址參數
