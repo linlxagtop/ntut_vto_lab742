@@ -561,11 +561,17 @@ function callbackTrack(detectState){
       if (descriptionContainer) {
         descriptionContainer.style.display = 'block';
       }
-      // 確保挑色選項按鈕顯示，並設定 gold 按鈕預設被選中
-      setActiveButton(document.getElementById('gold'));
       _isWatchDescriptionShown = true;
-      // 只有study01和study02才顯示手錶描述
-      if ((currentStudy=='study01' || currentStudy=='study02') && watchDescription && currentWatchDescription) {
+      // 只有study01, study02, study05, study06, study07, study08才顯示手錶描述
+      if (watchDescription && currentWatchDescription) { 
+        if (currentStudy=='study01' || currentStudy=='study02') {
+          // 確保挑色選項按鈕顯示，並設定 gold 按鈕預設被選中
+          setActiveButton(document.getElementById('gold'));
+        }
+        if (currentStudy=='study05' || currentStudy=='study06' || currentStudy=='study07' || currentStudy=='study08') {
+          // 確保挑色選項按鈕顯示，並設定 leather 按鈕預設被選中
+          setActiveButton(document.getElementById('leather'));
+        }
         watchDescription.style.display = 'block';
       }
     }
@@ -643,7 +649,7 @@ function changeWatchColor(color) {
   const currentStudy = _settings.currentStudy || 'study01';
   
   // 檢查研究版本參數
-  if (studyParam === '1' || studyParam === '2' || studyParam === '5' || studyParam === '5vn' || studyParam === '6' || studyParam === '7' || studyParam === '8') {
+  if (studyParam === '1' || studyParam === '2' || studyParam === '5' || studyParam === '5vn' || studyParam === '6' || studyParam === '7' || studyParam === '8' || studyParam === '9') {
     // 若 s 參數是上述 study 情境，才需要 scrollingText 和 WatchDescription
     
     // 若 g 參數與 color 都存在於 marqueeData 中
@@ -668,7 +674,7 @@ function changeWatchColor(color) {
     // 載入手錶描述
     loadWatchDescription(currentStudy, gParam, color);
   } 
-  else if (studyParam === '3' || studyParam === '4') {
+  else if (studyParam === '3' || studyParam === '4' || studyParam === '7' || studyParam === '8' || studyParam === '9') {
     // 若 s 參數是 3 或 4，需要依照點選 color 更新 videoId 以播放不同影片
     // 根據 gParam 和 color 取得對應的影片 ID
     let videoId;
