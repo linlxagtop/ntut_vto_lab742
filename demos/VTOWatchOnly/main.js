@@ -849,7 +849,7 @@ function handleUrlParameters() {
   if ((studyParam === '1' || studyParam === '2' || 
     studyParam === '5' || studyParam === '5vn' || 
     studyParam === '6' || studyParam === '7' || studyParam === '8') && gParam) {
-    loadWatchDescription(studyParam, gParam, color);
+    loadWatchDescription(_settings.currentStudy, gParam, color);
   }
 
   console.log('Using study(s) version:', _settings.currentStudy);
@@ -915,10 +915,10 @@ function updateWatchDescription(description) {
 }
 
 // 載入手錶描述的函數
-function loadWatchDescription(studyVersion, gParam, color) {
-  if (!studyVersion || !gParam || !color) return;
+function loadWatchDescription(currentStudy = _settings.currentStudy, gParam, color) {
+  if (!currentStudy || !gParam || !color) return;
   
-  const introJsonPath = `${studyVersion}/${studyVersion}_intro.json`;
+  const introJsonPath = `${currentStudy}/${currentStudy}_intro.json`;
   console.log('Load watch description:', introJsonPath);
 
   fetch(introJsonPath)
