@@ -735,6 +735,7 @@ function playVideo(videoId = 'Welcome_High') {
     
     // 設置影片來源並加載
     videoPlayer.src = `https://ntut-vto-video.zeabur.app/${validVideoId}.mp4`;
+    console.log('Play video:', videoPlayer.src);
     videoPlayer.load();
     
     // 確保影片屬性設置正確
@@ -824,6 +825,7 @@ function handleUrlParameters() {
   const videoId = urlParams.get('v');
   if (videoId) {
     const videoPlayer = document.getElementById('videoPlayer');
+    _settings.currentWatchColor = 'gold';
     videoPlayer.style.display = 'block';
   } 
   // 沒有 v 參數可能會因 study 情境需要播放影片
@@ -917,17 +919,20 @@ function loadWatchDescription(studyVersion, gParam, color) {
   if (!studyVersion || !gParam || !color) return;
   
   const introJsonPath = `${studyVersion}/${studyVersion}_intro.json`;
-  
+  console.log('Load watch description:', introJsonPath);
+
   fetch(introJsonPath)
     .then(response => response.json())
     .then(data => {
       if (data && data[gParam] && data[gParam][color]) {
         const description = data[gParam][color];
+        console.log('Watch description:', description);
         updateWatchDescription(description);
         // 儲存描述到設置中，供後續顯示用
         _settings.currentWatchDescription = description;
       } else {
         // 若無對應資料則隱藏描述
+        console.log('No watch description');
         const descriptionElement = document.getElementById('watchDescription');
         if (descriptionElement) {
           descriptionElement.style.display = 'none';
