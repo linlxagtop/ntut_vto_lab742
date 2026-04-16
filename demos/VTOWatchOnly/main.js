@@ -1,14 +1,23 @@
 /*
 main.js 程式結構簡要（含呼叫順序）
-1) 入口：`window.addEventListener('load', main)`。
-2) `main()`：解析 URL 參數（`handleUrlParameters`），設定畫布/切鏡頭按鈕，呼叫
-   `HandTrackerThreeHelper.init(...)` 啟動手部追蹤與 Three.js，完成後進入 `start(three)`。
-3) `start(three)`：設定光源（`setup_lighting`）與 loading manager，先加遮擋器
-   （`add_softOccluder`），再載入手錶模型（`load_model`）。
-4) 執行期：每幀由 `callbackTrack(detectState)` 驅動偵測狀態與互動流程，必要時觸發
-   UI/內容更新（如 `hide_instructions`、`playVideo`、`updateMarqueeText`、`updateWatchDescription`）。
-5) 輔助功能：`changeWatchColor` 切換錶款與模型、`change_camera` 切換前後鏡頭、
-   `startCountdownTimer` 控制實驗倒數與問卷按鈕顯示。
+1) 入口：window.addEventListener('load', main)。
+＊2) main()：解析 URL 參數（handleUrlParameters），設定畫布/切鏡頭按鈕，呼叫
+   HandTrackerThreeHelper.init(...) 啟動手部追蹤與 Three.js，完成後進入 start(three)。
+   ＊ handleUrlParameters() 解析 URL 參數尤其重要，設定實驗情境、手錶款式、影片、資源等。
+3) start(three)：設定光源（setup_lighting）與 loading manager，先加遮擋器
+   （add_softOccluder），再載入手錶模型（load_model）。
+＊4) 執行期：每幀由 callbackTrack(detectState) 驅動偵測狀態與互動流程，必要時觸發
+   UI/內容更新（如 hide_instructions、playVideo、updateMarqueeText、updateWatchDescription）。
+   ＊ hide_instructions() 隱藏手臂姿勢提示 尤其重要，偵測到手臂開始VTO體驗時，連鎖觸發實驗情境的所有動作，如以下設定：
+   playVideo 播放影片
+   updateMarqueeText 更新跑馬燈文字
+   updateWatchDescription 更新手錶描述
+   changeWatchColor 切換錶款與模型
+   change_camera 切換前後鏡頭
+   startCountdownTimer 控制實驗倒數與問卷按鈕顯示
+   handleUrlParameters 解析 URL 參數
+5) 輔助功能：changeWatchColor 切換錶款與模型、change_camera 切換前後鏡頭、
+   startCountdownTimer 控制實驗倒數與問卷按鈕顯示。
 */
 
 // 用於存儲當前選擇的模型集合（正常或低解析度）
@@ -475,25 +484,25 @@ function hide_instructions(){
     }
   }
   
-  // 3. 顯示手錶描述
+  // 2. 顯示手錶描述
   if (!_isWatchDescriptionShown) {
     const watchDescription = document.getElementById('watchDescription');
     const descriptionContainer = document.querySelector('.description-buttons-container');
     const currentWatchDescription = _settings.currentWatchDescription;
-    // 確保容器必須顯示
-    if (descriptionContainer) {
-      descriptionContainer.style.display = 'block';
-    }
-    // 確保挑色選項按鈕顯示，並設定 gold 按鈕預設被選中
-    setActiveButton(document.getElementById('leather'));
-    _isWatchDescriptionShown = true;
     // 顯示手錶描述
     if ((currentStudy=='study01' || currentStudy=='study02' || currentStudy=='study05' || currentStudy=='study05vn' || currentStudy=='study06' || currentStudy=='study07' || currentStudy=='study08') && watchDescription && currentWatchDescription) {
-      watchDescription.style.display = 'block';
+      if (descriptionContainer) {
+        descriptionContainer.style.display = 'block';
+      }
+      if (watchDescription) {
+        watchDescription.style.display = 'block';
+      }
+      _isWatchDescriptionShown = true;
+      updateWatchDescription(currentWatchDescription);
     }
   }
   
-  // 4. 處理跑馬燈顯示
+  // 3. 處理跑馬燈顯示
   const scrollingText = document.getElementById('scrollingText');
   if (_settings.marqueeState) {
     if (!_isMarqueeShown) {
@@ -765,7 +774,7 @@ function handleUrlParameters() {
   if(resource === 'low') {
     currentModelSet = _settings.watchModelsLow;
     _settings.modelScale = 3.5;
-  }  else if(resource === 'materials') {
+  } else if(resource === 'materials') {
     currentModelSet = _settings.watchModelsMaterials;
     _settings.modelScale = 1.3 * 1.462;
   } else {
@@ -779,12 +788,9 @@ function handleUrlParameters() {
   console.log('Initial model URL set to:', _settings.modelURL);
   console.log('Using model set: ', resource);
 
-  // 處理研究版本參數 s
-  const studyParam = urlParams.get('s');
-  let gParam = urlParams.get('g'); // 例如 'uti' 或 'hed' 或 'comm' 或 'v2026'
-  let commentId = urlParams.get('c');
   
-  // 設定研究版本 (從study01到studyXX)
+  // 處理 study 情境 s 參數，從study01到studyXX
+  const studyParam = urlParams.get('s');
   if (studyParam === '1') {
     _settings.currentStudy = 'study01';
   } else if (studyParam === '2') {
@@ -810,27 +816,23 @@ function handleUrlParameters() {
   }
   
   // 處理跑馬燈參數 c
+  const gParam = urlParams.get('g'); // 例如 'uti' 或 'hed' 或 'comm' 或 'v2026'
+  const commentId = urlParams.get('c');
   _settings.marqueeState = commentId ? commentId : null;
-  
-  // 載入初始手錶描述
-  if ((studyParam === '1' || studyParam === '2' || studyParam === '5' || studyParam === '5vn') && gParam) {
-    loadWatchDescription(_settings.currentStudy, gParam, _settings.currentWatchColor);
-  }
   
   // 處理影片參數 v
   const videoId = urlParams.get('v');
-  let color;
   if (videoId) {
     const videoPlayer = document.getElementById('videoPlayer');
     videoPlayer.style.display = 'block';
   } 
   // 沒有 v 參數可能會因 study 情境需要播放影片
   else if (studyParam === '3' || studyParam === '4') {
-    color = 'gold';
+    _settings.currentWatchColor = 'gold';
     videoPlayer.style.display = 'block';
   } 
   else if (studyParam === '7' || studyParam === '8' || studyParam === '9') {
-    color = 'leather';
+    _settings.currentWatchColor = 'leather';
     videoPlayer.style.display = 'block';
   } 
   else {
@@ -838,6 +840,14 @@ function handleUrlParameters() {
       // 隱藏影片播放器
       videoPlayer.style.display = 'none';
     }
+  }
+  
+  // 載入初始手錶描述，需根據影片設定中的 _settings.currentWatchColor 控制 color
+  const color = _settings.currentWatchColor;
+  if ((studyParam === '1' || studyParam === '2' || 
+    studyParam === '5' || studyParam === '5vn' || 
+    studyParam === '6' || studyParam === '7' || studyParam === '8') && gParam) {
+    loadWatchDescription(studyParam, gParam, color);
   }
 
   console.log('Using study(s) version:', _settings.currentStudy);
