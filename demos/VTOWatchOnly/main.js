@@ -1,3 +1,16 @@
+/*
+main.js 程式結構簡要（含呼叫順序）
+1) 入口：`window.addEventListener('load', main)`。
+2) `main()`：解析 URL 參數（`handleUrlParameters`），設定畫布/切鏡頭按鈕，呼叫
+   `HandTrackerThreeHelper.init(...)` 啟動手部追蹤與 Three.js，完成後進入 `start(three)`。
+3) `start(three)`：設定光源（`setup_lighting`）與 loading manager，先加遮擋器
+   （`add_softOccluder`），再載入手錶模型（`load_model`）。
+4) 執行期：每幀由 `callbackTrack(detectState)` 驅動偵測狀態與互動流程，必要時觸發
+   UI/內容更新（如 `hide_instructions`、`playVideo`、`updateMarqueeText`、`updateWatchDescription`）。
+5) 輔助功能：`changeWatchColor` 切換錶款與模型、`change_camera` 切換前後鏡頭、
+   `startCountdownTimer` 控制實驗倒數與問卷按鈕顯示。
+*/
+
 // 用於存儲當前選擇的模型集合（正常或低解析度）
 let currentModelSet = null;
 
@@ -414,7 +427,7 @@ function hide_loading(){
   }
 }
 
-
+// 偵測到手臂開始VTO體驗
 function hide_instructions(){
   const domInstructions = document.getElementById('instructions');
   if (!domInstructions){
@@ -427,25 +440,39 @@ function hide_instructions(){
   }, 800);
   
   // 執行 callbackTrack 中的必要動作
-  
-  // 1. 啟動倒數計時器
-  if (!_isCountdownStarted) {
-    startCountdownTimer();
-    _isCountdownStarted = true;
-  }
-  
-  // 2. 處理影片播放
+  const currentStudy = _settings.currentStudy;
   const urlParams = new URLSearchParams(window.location.search);
+  
+  // 1. 處理影片播放
   const videoId = urlParams.get('v');
+  const color = _settings.currentWatchColor;
+  const gParam = urlParams.get('g'); // 例如 'uti' 或 'hed'
+  const studyParam = urlParams.get('s'); // 研究版本參數
   const videoPlayer = document.getElementById('videoPlayer');
   if (videoId && !_isVideoStarted && _state === _states.running) {
-    _isVideoStarted = true;
-    videoPlayer.style.display = 'block';
-    setTimeout(() => {
-      videoPlayer.play().catch(error => {
-        console.log('Video autoplay failed:', error);
-      });
-    }, 1000);
+    // 播放對應的影片
+    _isVideoStarted = playVideo(videoId);
+  }
+  // 若study情境是3, 4, 7, 8, 9，需要依照點選 color 更新 videoId 以播放不同影片
+  else if (studyParam === '3' || studyParam === '4' || studyParam === '7' || studyParam === '8' || studyParam === '9') {
+    // 根據 gParam 和 color 取得對應的影片 ID
+    let videoId;
+    if (videoData[gParam] && videoData[gParam][color]) {
+      videoId = videoData[gParam][color];
+    } else {
+      videoId = videoData.default;
+    }
+    
+    // 播放對應的影片
+    _isVideoStarted = playVideo(videoId);
+  } 
+  // 其他情況不需要影片
+  else{
+    if (videoPlayer) {
+      // 隱藏影片播放器
+      videoPlayer.style.display = 'none';
+      _isVideoStarted = false;
+    }
   }
   
   // 3. 顯示手錶描述
@@ -453,7 +480,6 @@ function hide_instructions(){
     const watchDescription = document.getElementById('watchDescription');
     const descriptionContainer = document.querySelector('.description-buttons-container');
     const currentWatchDescription = _settings.currentWatchDescription;
-    const currentStudy = _settings.currentStudy;
     // 確保容器必須顯示
     if (descriptionContainer) {
       descriptionContainer.style.display = 'block';
@@ -461,7 +487,7 @@ function hide_instructions(){
     // 確保挑色選項按鈕顯示，並設定 gold 按鈕預設被選中
     setActiveButton(document.getElementById('leather'));
     _isWatchDescriptionShown = true;
-    // 只有study01和study02才顯示手錶描述
+    // 顯示手錶描述
     if ((currentStudy=='study01' || currentStudy=='study02' || currentStudy=='study05' || currentStudy=='study05vn' || currentStudy=='study06' || currentStudy=='study07' || currentStudy=='study08') && watchDescription && currentWatchDescription) {
       watchDescription.style.display = 'block';
     }
@@ -525,9 +551,10 @@ let _isWatchDescriptionShown = false;
 let _isCountdownStarted = false;
 let _countdownInterval = null;
 
-// call by main()
+// add listener by main()
 function callbackTrack(detectState){
   if (detectState.isDetected) {
+    // 隱藏手臂姿勢提示
     if (!_isInstructionsHidden){
       hide_instructions();
     }
@@ -537,48 +564,9 @@ function callbackTrack(detectState){
       startCountdownTimer();
       _isCountdownStarted = true;
     }
-    
-    // 影片播放處理
-    const urlParams = new URLSearchParams(window.location.search);
-    const videoId = urlParams.get('v');
-    const videoPlayer = document.getElementById('videoPlayer');
-    if (videoId && !_isVideoStarted && _state === _states.running) {
-      _isVideoStarted = true;
-      videoPlayer.style.display = 'block';
-      setTimeout(() => {
-        videoPlayer.play().catch(error => {
-          console.log('Video autoplay failed:', error);
-        });
-      }, 1000);
-    }
-    const gParam = urlParams.get('g'); // 例如 'uti' 或 'hed'
-    const studyParam = urlParams.get('s'); // 研究版本參數
+
     // 使用當前研究版本 (從handleUrlParameters中獲取)
     const currentStudy = _settings.currentStudy || 'study01';
-
-    // 若 s 參數是 3 或 4，需要依照點選 color 更新 videoId 以播放不同影片
-    if (studyParam === '3' || studyParam === '4' || studyParam === '7' || studyParam === '8' || studyParam === '9') {
-      // 根據 gParam 和 color 取得對應的影片 ID
-      let videoId;
-      if (videoData[gParam] && videoData[gParam][color]) {
-        videoId = videoData[gParam][color];
-      } else {
-        videoId = videoData.default;
-      }
-      
-      // 播放對應的影片
-      playVideo(videoId);
-    } 
-    // 不需要影片
-    else{
-      const videoPlayer = document.getElementById('videoPlayer');
-      if (videoPlayer) {
-        // 隱藏影片播放器
-        videoPlayer.style.display = 'none';
-        _isVideoStarted = false;
-      }
-    }
-
     // 手錶描述顯示處理（只在第一次觸發時顯示）
     if (!_isWatchDescriptionShown) {
       const watchDescription = document.getElementById('watchDescription');
@@ -713,7 +701,7 @@ function changeWatchColor(color) {
     }
     
     // 播放對應的影片
-    playVideo(videoId);
+    _isVideoStarted = playVideo(videoId);
   } 
   // 不需要影片
   else{
@@ -751,9 +739,11 @@ function playVideo(videoId = 'Welcome_High') {
     videoPlayer.style.display = 'block';
     
     // 播放影片
-    videoPlayer.play().catch(e => {
-      console.error('影片播放失敗:', e);
-    });
+    setTimeout(() => {
+      videoPlayer.play().catch(error => {
+        console.log('Video autoplay failed:', error);
+      });
+    }, 1000);
     
     return true;
   } else {
@@ -765,7 +755,7 @@ function playVideo(videoId = 'Welcome_High') {
 // 將 playVideo 函數添加到 window 對象，使其可以從 HTML 中調用
 window.playVideo = playVideo;
 
-// URL參數處理函數
+// 從 main 優先呼叫，透過 URL 參數設定頁面實驗情境
 function handleUrlParameters() {
   const urlParams = new URLSearchParams(window.location.search);
   
@@ -829,31 +819,32 @@ function handleUrlParameters() {
   
   // 處理影片參數 v
   const videoId = urlParams.get('v');
+  let color;
   if (videoId) {
     const videoPlayer = document.getElementById('videoPlayer');
     videoPlayer.style.display = 'block';
-    playVideo(videoId); // 使用新的 playVideo 函數
-  } else {
-    // 若沒有指定影片參數，但有其他參數，則根據 gParam 和 color 選擇影片
-    const gParam = urlParams.get('g');
-    const studyParam = urlParams.get('s');
-    
-    // 只有當 s=3-8  且有 gParam 參數時，才根據 videoData 選擇影片
-    if ((studyParam === '3' || studyParam === '4' || studyParam === '5' || studyParam === '5vn' || studyParam === '6' || studyParam === '7' || studyParam === '8') && gParam && videoData[gParam]) {
-      const color = _settings.currentWatchColor || 'gold'; // 預設為 gold
-      
-      if (videoData[gParam][color]) {
-        const videoPlayer = document.getElementById('videoPlayer');
-        if (videoPlayer) videoPlayer.style.display = 'block';
-        playVideo(videoData[gParam][color]);
-      }
+  } 
+  // 沒有 v 參數可能會因 study 情境需要播放影片
+  else if (studyParam === '3' || studyParam === '4') {
+    color = 'gold';
+    videoPlayer.style.display = 'block';
+  } 
+  else if (studyParam === '7' || studyParam === '8' || studyParam === '9') {
+    color = 'leather';
+    videoPlayer.style.display = 'block';
+  } 
+  else {
+    if (videoPlayer) {
+      // 隱藏影片播放器
+      videoPlayer.style.display = 'none';
     }
   }
 
-  console.log('Using study version:', _settings.currentStudy);
-  console.log('Using g parameter:', gParam);
-  console.log('Using c parameter:', commentId);
-  console.log('Using v parameter:', videoId);
+  console.log('Using study(s) version:', _settings.currentStudy);
+  console.log('Using group(g) scenario:', gParam);
+  console.log('Using comment(c) scenario:', commentId);
+  console.log('Using video(v) scenario:', videoId);
+  console.log('Using resource(res) 3D model:', resource);
 }
 
 // 更新跑馬燈文字
