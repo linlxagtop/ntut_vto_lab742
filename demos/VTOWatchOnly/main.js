@@ -10,6 +10,7 @@ main.js 程式結構簡要（含呼叫順序）
    UI/內容更新（如 hide_instructions、playVideo、updateMarqueeText、updateWatchDescription）。
    ＊ hide_instructions() 隱藏手臂姿勢提示 尤其重要，偵測到手臂開始VTO體驗時，連鎖觸發實驗情境的所有動作，如以下設定：
    playVideo 播放影片
+   playMusic 播放背景音樂
    updateMarqueeText 更新跑馬燈文字
    updateWatchDescription 更新手錶描述
    changeWatchColor 切換錶款與模型
@@ -220,6 +221,67 @@ const videoData = {
   // 預設影片
   default: 'Welcome_High'
 };
+
+// 播放指定影片的函數
+function playVideo(videoId = 'Welcome_High') {
+  const videoPlayer = document.getElementById('videoPlayer');
+  if (videoPlayer) {
+    // 檢查videoId是否在可用列表中，若不在則使用預設值
+    const validVideoId = videoData.availableVideos.includes(videoId) ? videoId : videoData.default;
+    
+    // 設置影片來源並加載
+    videoPlayer.src = `https://ntut-vto-video.zeabur.app/${validVideoId}.mp4`;
+    console.log('Play video:', videoPlayer.src);
+    videoPlayer.load();
+    
+    // 確保影片屬性設置正確
+    videoPlayer.setAttribute('playsinline', '');
+    videoPlayer.setAttribute('webkit-playsinline', '');
+    
+    // 顯示播放器控制項
+    videoPlayer.controls = true;
+    
+    // 顯示影片播放器
+    videoPlayer.style.display = 'block';
+    
+    // 播放影片
+    setTimeout(() => {
+      videoPlayer.play().catch(error => {
+        console.log('Video autoplay failed:', error);
+      });
+    }, 1000);
+    
+    return true;
+  } else {
+    console.error('Video player not found');
+    return false;
+  }
+}
+
+// study09 音樂情境（URL: s=9 & g=music）：錶款對應背景音樂（供 #musicPlayer 使用，如 vto06.html）
+const musicData = {
+  leather: 'assets/music/EasyToLove.mp3',
+  happy: 'assets/music/IFeelFine.mp3',
+  silver: 'assets/music/EasyAndFun.mp3'
+};
+
+function playMusic(color) {
+  const musicPlayer = document.getElementById('musicPlayer');
+  if (!musicPlayer) {
+    return;
+  }
+  const path = musicData[color] || musicData.leather;
+  musicPlayer.loop = true;
+  musicPlayer.volume = 0.35;
+  musicPlayer.src = path;
+  musicPlayer.load();
+  const playPromise = musicPlayer.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(function (err) {
+      console.log('Music play failed:', err);
+    });
+  }
+}
 
 const _states = {
   notLoaded: -1,
@@ -460,7 +522,7 @@ function hide_instructions(){
     _isVideoStarted = playVideo(videoId);
   }
   // 若study情境是3, 4, 7, 8, 9，需要依照點選 color 更新 videoId 以播放不同影片
-  else if (studyParam === '3' || studyParam === '4' || studyParam === '7' || studyParam === '8' || studyParam === '9') {
+  else if (studyParam === '3' || studyParam === '4' || (studyParam === '7' && gParam === 'av') || studyParam === '8' || studyParam === '9') {
     // 根據 gParam 和 color 取得對應的影片 ID
     let videoId;
     if (videoData[gParam] && videoData[gParam][color]) {
@@ -530,6 +592,11 @@ function hide_instructions(){
   } else {
     if (scrollingText) scrollingText.style.display = 'none';
     _isMarqueeShown = false;
+  }
+
+  // 4. 處理背景音樂
+  if (studyParam === '9' && gParam === 'music') {
+    playMusic(color);
   }
 }
 
@@ -671,7 +738,7 @@ function changeWatchColor(color) {
   // 檢查study參數，若 s 參數是上述 study 情境，才需要 scrollingText 和 WatchDescription
   if (studyParam === '1' || studyParam === '2' || 
     studyParam === '5' || studyParam === '5vn' || 
-    studyParam === '6' || studyParam === '7' || studyParam === '8') {
+    studyParam === '6' || (studyParam === '7' && gParam === 'ew') || studyParam === '8') {
     
     // 若 g 參數與 color 都存在於 marqueeData 中
     if (gParam && marqueeData[currentStudy] && marqueeData[currentStudy][gParam] && marqueeData[currentStudy][gParam][color]) {
@@ -697,7 +764,7 @@ function changeWatchColor(color) {
   } 
 
   // 若 s 參數是 3 或 4，需要依照點選 color 更新 videoId 以播放不同影片
-  if (studyParam === '3' || studyParam === '4' || studyParam === '7' || studyParam === '8' || studyParam === '9') {
+  if (studyParam === '3' || studyParam === '4' || (studyParam === '7' && gParam === 'av') || studyParam === '8' || studyParam === '9') {
     // 根據 gParam 和 color 取得對應的影片 ID
     let videoId;
     if (videoData[gParam] && videoData[gParam][color]) {
@@ -718,46 +785,15 @@ function changeWatchColor(color) {
       _isVideoStarted = false;
     }
   }
+
+  // study09 音樂情境：背景音樂（與 playVideo 相同觸發點）
+  if (studyParam === '9' && gParam === 'music') {
+    playMusic(color);
+  }
 }
 
 // 將 changeWatchColor 函數添加到 window 對象，使其可以從 HTML 中調用
 window.changeWatchColor = changeWatchColor;
-
-// 播放指定影片的函數
-function playVideo(videoId = 'Welcome_High') {
-  const videoPlayer = document.getElementById('videoPlayer');
-  if (videoPlayer) {
-    // 檢查videoId是否在可用列表中，若不在則使用預設值
-    const validVideoId = videoData.availableVideos.includes(videoId) ? videoId : videoData.default;
-    
-    // 設置影片來源並加載
-    videoPlayer.src = `https://ntut-vto-video.zeabur.app/${validVideoId}.mp4`;
-    console.log('Play video:', videoPlayer.src);
-    videoPlayer.load();
-    
-    // 確保影片屬性設置正確
-    videoPlayer.setAttribute('playsinline', '');
-    videoPlayer.setAttribute('webkit-playsinline', '');
-    
-    // 顯示播放器控制項
-    videoPlayer.controls = true;
-    
-    // 顯示影片播放器
-    videoPlayer.style.display = 'block';
-    
-    // 播放影片
-    setTimeout(() => {
-      videoPlayer.play().catch(error => {
-        console.log('Video autoplay failed:', error);
-      });
-    }, 1000);
-    
-    return true;
-  } else {
-    console.error('Video player not found');
-    return false;
-  }
-}
 
 // 將 playVideo 函數添加到 window 對象，使其可以從 HTML 中調用
 window.playVideo = playVideo;
@@ -830,7 +866,7 @@ function handleUrlParameters() {
     _settings.currentWatchColor = 'gold';
     videoPlayer.style.display = 'block';
   } 
-  else if (studyParam === '7' || studyParam === '8' || studyParam === '9') {
+  else if (studyParam === '7' && gParam === 'av' || studyParam === '8' || studyParam === '9') {
     _settings.currentWatchColor = 'leather';
     videoPlayer.style.display = 'block';
   } 
@@ -845,7 +881,7 @@ function handleUrlParameters() {
   const color = _settings.currentWatchColor;
   if ((studyParam === '1' || studyParam === '2' || 
     studyParam === '5' || studyParam === '5vn' || 
-    studyParam === '6' || studyParam === '7' || studyParam === '8') && gParam) {
+    studyParam === '6' || (studyParam === '7' && gParam === 'ew') || studyParam === '8') && gParam) {
     loadWatchDescription(_settings.currentStudy, gParam, color);
   }
 
