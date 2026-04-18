@@ -92,12 +92,9 @@ const _settings = {
     'black': 'assets/watchDw_black_low.glb'
   },
   watchModelsMaterials: {
-  //  'leather': 'assets/watchDw_leather.glb',
-  //  'happy': 'assets/watchDw_happy.glb',
-  //  'silver': 'assets/watchDw_silver.glb'
-    'leather': 'assets/watchDw_gold.glb',
-    'happy': 'assets/watchDw_black.glb',
-    'silver': 'assets/watchDw_red.glb'
+    'leather': 'assets/watchDw_leather.glb',
+    'happy': 'assets/watchDw_happy.glb',
+    'silver': 'assets/watchDw_silver.glb'
   },
   currentWatchColor: 'leather' // 預設款式
 };
