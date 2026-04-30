@@ -170,6 +170,13 @@ const marqueeData = {
       'happy': 'study08/study08_happy.json',
       'silver': 'study08/study08_silver.json'
     }
+  },
+  'study09': {
+    'v2026': {
+      'leather': 'study09/study09_leather.json',
+      'happy': 'study09/study09_happy.json',
+      'silver': 'study09/study09_silver.json'
+    }
   }
 }
 
