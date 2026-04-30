@@ -158,21 +158,36 @@ const marqueeData = {
     }
   },
   'study07': {
-    'v2026': {
-      'leather': 'study07/study07_leather.json',
-      'happy': 'study07/study07_happy.json',
-      'silver': 'study07/study07_silver.json'
+    'av': {
+      'leather': 'study08/study08_leather.json',
+      'happy': 'study08/study08_happy.json',
+      'silver': 'study08/study08_silver.json'
+    },
+    'ew': {
+      'leather': 'study08/study08_leather.json',
+      'happy': 'study08/study08_happy.json',
+      'silver': 'study08/study08_silver.json'
     }
   },
   'study08': {
-    'v2026': {
+    'av': {
+      'leather': 'study08/study08_leather.json',
+      'happy': 'study08/study08_happy.json',
+      'silver': 'study08/study08_silver.json'
+    },
+    'ew': {
       'leather': 'study08/study08_leather.json',
       'happy': 'study08/study08_happy.json',
       'silver': 'study08/study08_silver.json'
     }
   },
   'study09': {
-    'v2026': {
+    'music': {
+      'leather': 'study09/study09_leather.json',
+      'happy': 'study09/study09_happy.json',
+      'silver': 'study09/study09_silver.json'
+    },
+    'nom': {
       'leather': 'study09/study09_leather.json',
       'happy': 'study09/study09_happy.json',
       'silver': 'study09/study09_silver.json'
