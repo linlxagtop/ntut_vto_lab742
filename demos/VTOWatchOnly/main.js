@@ -158,39 +158,17 @@ const marqueeData = {
     }
   },
   'study07': {
-    'av': {
-      'leather': 'study08/study08_leather.json',
-      'happy': 'study08/study08_happy.json',
-      'silver': 'study08/study08_silver.json'
-    },
-    'ew': {
-      'leather': 'study08/study08_leather.json',
-      'happy': 'study08/study08_happy.json',
-      'silver': 'study08/study08_silver.json'
+    'v2026': {
+      'leather': 'study07/study07_leather.json',
+      'happy': 'study07/study07_happy.json',
+      'silver': 'study07/study07_silver.json'
     }
   },
   'study08': {
-    'av': {
+    'v2026': {
       'leather': 'study08/study08_leather.json',
       'happy': 'study08/study08_happy.json',
       'silver': 'study08/study08_silver.json'
-    },
-    'ew': {
-      'leather': 'study08/study08_leather.json',
-      'happy': 'study08/study08_happy.json',
-      'silver': 'study08/study08_silver.json'
-    }
-  },
-  'study09': {
-    'music': {
-      'leather': 'study09/study09_leather.json',
-      'happy': 'study09/study09_happy.json',
-      'silver': 'study09/study09_silver.json'
-    },
-    'nom': {
-      'leather': 'study09/study09_leather.json',
-      'happy': 'study09/study09_happy.json',
-      'silver': 'study09/study09_silver.json'
     }
   }
 }
@@ -236,6 +214,26 @@ const videoData = {
   },
   // 2026 scenario avatar videos
   v2026: {
+    leather: 'ClassicStMawes_leather',
+    happy: 'ClassicSheffield_happy',
+    silver: 'Petite_silver'
+  },
+  av: {
+    leather: 'ClassicStMawes_leather',
+    happy: 'ClassicSheffield_happy',
+    silver: 'Petite_silver'
+  },
+  ew: {
+    leather: 'ClassicStMawes_leather',
+    happy: 'ClassicSheffield_happy',
+    silver: 'Petite_silver'
+  },
+  music: {
+    leather: 'ClassicStMawes_leather',
+    happy: 'ClassicSheffield_happy',
+    silver: 'Petite_silver'
+  },
+  nom: {
     leather: 'ClassicStMawes_leather',
     happy: 'ClassicSheffield_happy',
     silver: 'Petite_silver'
