@@ -1,1 +1,1 @@
-ffmpeg -i input.mp4 -vcodec libx265 -crf 28 output.mp4
+ffmpeg -i input.mp4 -c:v libx265 -crf 28 -tag:v hvc1 -c:a aac -movflags +faststart output.mp4
