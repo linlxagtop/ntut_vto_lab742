@@ -191,7 +191,8 @@ const videoData = {
     'ClassicCanterbury_High', 'ClassicCanterbury_Low',
     'ClassicGlasgow_High', 'ClassicGlasgow_Low',
     'Welcome_High', 'Welcome_Low',
-    'ClassicStMawes_leather', 'ClassicSheffield_happy', 'Petite_silver'
+    'ClassicStMawes_leather', 'ClassicSheffield_happy', 'Petite_silver',
+    'ClassicStMawes_leather_mus', 'ClassicSheffield_happy_mus', 'Petite_silver_mus'
   ],
   // 預設影片組
   comm: {
