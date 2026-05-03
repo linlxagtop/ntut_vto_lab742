@@ -158,17 +158,27 @@ const marqueeData = {
     }
   },
   'study07': {
-    'v2026': {
+    'av': {
+      'leather': 'study07/study07_leather.json',
+      'happy': 'study07/study07_happy.json',
+      'silver': 'study07/study07_silver.json'
+    },
+    'ew': {
       'leather': 'study07/study07_leather.json',
       'happy': 'study07/study07_happy.json',
       'silver': 'study07/study07_silver.json'
     }
   },
   'study08': {
-    'v2026': {
-      'leather': 'study08/study08_leather.json',
-      'happy': 'study08/study08_happy.json',
-      'silver': 'study08/study08_silver.json'
+    'av': {
+      'leather': 'study07/study07_leather.json',
+      'happy': 'study07/study07_happy.json',
+      'silver': 'study07/study07_silver.json'
+    },
+    'ew': {
+      'leather': 'study07/study07_leather.json',
+      'happy': 'study07/study07_happy.json',
+      'silver': 'study07/study07_silver.json'
     }
   }
 }
