@@ -239,9 +239,9 @@ const videoData = {
     silver: 'Petite_silver'
   },
   music: {
-    leather: 'ClassicStMawes_leather',
-    happy: 'ClassicSheffield_happy',
-    silver: 'Petite_silver'
+    leather: 'ClassicStMawes_leather_mus',
+    happy: 'ClassicSheffield_happy_mus',
+    silver: 'Petite_silver_mus'
   },
   nom: {
     leather: 'ClassicStMawes_leather',
@@ -289,10 +289,17 @@ function playVideo(videoId = 'Welcome_High') {
 }
 
 // study09 音樂情境（URL: s=9 & g=music）：錶款對應背景音樂（供 #musicPlayer 使用，如 vto06.html）
+/* original video
 const musicData = {
   leather: 'assets/music/EasyToLove.mp3',
   happy: 'assets/music/IFeelFine.mp3',
   silver: 'assets/music/EasyAndFun.mp3'
+};
+*/
+const musicData = {
+  leather: 'assets/music/EasyToLove_mus.mp3',
+  happy: 'assets/music/IFeelFine_mus.mp3',
+  silver: 'assets/music/EasyAndFun_mus.mp3'
 };
 
 function playMusic(color) {
