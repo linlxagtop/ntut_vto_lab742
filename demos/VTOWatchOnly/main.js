@@ -1064,7 +1064,14 @@ function startCountdownTimer() {
     // 格式化時間為 MM:SS
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
-    const formattedTime = `實驗時間 ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    const currentStudy = _settings.currentStudy
+    if(currentStudy =='study05vn'){
+      const formattedTime = `Thời gian thí nghiệm ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    else{
+      const formattedTime = `實驗時間 ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
     
     // 更新計時器顯示
     if (countdownEl) {
