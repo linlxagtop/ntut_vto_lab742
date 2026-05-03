@@ -560,7 +560,7 @@ function hide_instructions(){
     _isVideoStarted = playVideo(videoId);
   }
   // 若study情境是3, 4, 7, 8, 9，需要依照點選 color 更新 videoId 以播放不同影片
-  else if (studyParam === '3' || studyParam === '4' || (studyParam === '7' && gParam === 'av') || studyParam === '8' || studyParam === '9') {
+  else if (studyParam === '3' || studyParam === '4' || (studyParam === '7' && gParam === 'av') || (studyParam === '8' && gParam === 'av') || studyParam === '9') {
     // 根據 gParam 和 color 取得對應的影片 ID
     let videoId;
     if (videoData[gParam] && videoData[gParam][color]) {
@@ -633,9 +633,11 @@ function hide_instructions(){
   }
 
   // 4. 處理背景音樂
+  /* 以將音樂放到影片音軌處理
   if (studyParam === '9' && gParam === 'music') {
     playMusic(color);
   }
+  */
 }
 
 
@@ -776,7 +778,7 @@ function changeWatchColor(color) {
   // 檢查study參數，若 s 參數是上述 study 情境，才需要 scrollingText 和 WatchDescription
   if (studyParam === '1' || studyParam === '2' || 
     studyParam === '5' || studyParam === '5vn' || 
-    studyParam === '6' || (studyParam === '7' && gParam === 'ew') || studyParam === '8') {
+    studyParam === '6' || (studyParam === '7' && gParam === 'ew') || (studyParam === '8' && gParam === 'ew')) {
     
     // 若 g 參數與 color 都存在於 marqueeData 中
     if (gParam && marqueeData[currentStudy] && marqueeData[currentStudy][gParam] && marqueeData[currentStudy][gParam][color]) {
@@ -801,8 +803,8 @@ function changeWatchColor(color) {
     loadWatchDescription(currentStudy, gParam, color);
   } 
 
-  // 若 s 參數是 3 或 4，需要依照點選 color 更新 videoId 以播放不同影片
-  if (studyParam === '3' || studyParam === '4' || (studyParam === '7' && gParam === 'av') || studyParam === '8' || studyParam === '9') {
+  // 若study情境是3, 4, 7, 8, 9，需要依照點選 color 更新 videoId 以播放不同影片
+  if (studyParam === '3' || studyParam === '4' || (studyParam === '7' && gParam === 'av') || (studyParam === '8' && gParam === 'av') || studyParam === '9') {
     // 根據 gParam 和 color 取得對應的影片 ID
     let videoId;
     if (videoData[gParam] && videoData[gParam][color]) {
@@ -825,9 +827,11 @@ function changeWatchColor(color) {
   }
 
   // study09 音樂情境：背景音樂（與 playVideo 相同觸發點）
+  /* 以將音樂放到影片音軌處理
   if (studyParam === '9' && gParam === 'music') {
     playMusic(color);
   }
+  */
 }
 
 // 將 changeWatchColor 函數添加到 window 對象，使其可以從 HTML 中調用
