@@ -471,6 +471,9 @@ function load_model(threeLoadingManager){
 
     _state = _states.running;
 
+  }, undefined, function (err) {
+    console.error('GLTFLoader failed — check Network tab (status, bytes, URL). modelURL =', _settings.modelURL, err);
+    _state = _states.idle;
   });
 }
 
