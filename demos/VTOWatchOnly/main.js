@@ -993,7 +993,13 @@ function updateWatchDescription(description) {
 function loadWatchDescription(currentStudy = _settings.currentStudy, gParam, color) {
   if (!currentStudy || !gParam || !color) return;
   
-  const introJsonPath = `${currentStudy}/${currentStudy}_intro.json`;
+  let introJsonPath = '';
+  if(currentStudy =='study05vn'){
+    introJsonPath = `study05/study05_intro_vn.json`;
+  }
+  else{
+    introJsonPath = `${currentStudy}/${currentStudy}_intro.json`;
+  }
   console.log('Load watch description:', introJsonPath);
 
   fetch(introJsonPath)
