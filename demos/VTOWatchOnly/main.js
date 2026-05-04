@@ -1055,11 +1055,12 @@ function startCountdownTimer() {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
     const currentStudy = _settings.currentStudy
+    let formattedTime = ''
     if(currentStudy =='study05vn'){
-      const formattedTime = `Thời gian thí nghiệm ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      formattedTime = `Thời gian thí nghiệm ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
     else{
-      const formattedTime = `實驗時間 ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      formattedTime = `實驗時間 ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
     
     
