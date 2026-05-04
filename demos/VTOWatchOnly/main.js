@@ -97,7 +97,9 @@ const _settings = {
     'happy': 'assets/watchDw_happy.glb',
     'silver': 'assets/watchDw_silver.glb'
   },
-  currentWatchColor: 'leather' // 預設款式
+  currentWatchColor: 'leather', // 預設款式
+  currentStudy: '',
+  currentGroup: ''
 };
 
 // Marquee JSON Data
@@ -669,8 +671,9 @@ let _countdownInterval = null;
 
 // add listener by main()
 function callbackTrack(detectState){
-  const studyParam = urlParams.get('s'); // 研究版本參數
-  const gParam = urlParams.get('g'); // 例如 'uti' 或 'hed'
+  const currentStudy = _settings.currentStudy || 'study01'; // 研究版本參數
+  const gParam = _settings.currentGroup; // 例如 'uti' 或 'hed'
+  const color = _settings.currentWatchColor || 'gold';
   if (detectState.isDetected) {
     // 隱藏手臂姿勢提示
     if (!_isInstructionsHidden){
@@ -683,14 +686,11 @@ function callbackTrack(detectState){
       _isCountdownStarted = true;
     }
 
-    // 使用當前研究版本 (從handleUrlParameters中獲取)
-    const currentStudy = _settings.currentStudy || 'study01';
     // 手錶描述顯示處理（只在第一次觸發時顯示）
     if (!_isWatchDescriptionShown) {
       const watchDescription = document.getElementById('watchDescription');
       const descriptionContainer = document.querySelector('.description-buttons-container');
       const currentWatchDescription = _settings.currentWatchDescription;
-      const currentStudy = _settings.currentStudy;
       // 確保容器必須顯示
       if (descriptionContainer) {
         descriptionContainer.style.display = 'block';
@@ -702,8 +702,7 @@ function callbackTrack(detectState){
           // 確保挑色選項按鈕顯示，並設定 gold 按鈕預設被選中
           setActiveButton(document.getElementById('gold'));
         }
-        if (currentStudy=='study05' || currentStudy=='study06' || 
-          (studyParam === '7' && gParam === 'ew') || (studyParam === '8' && gParam === 'ew')) {
+        if (currentStudy=='study05' || currentStudy=='study05vn' || currentStudy=='study06' || (currentStudy=='study07' && gParam === 'ew') || (currentStudy=='study08' && gParam === 'ew')) {
           // 確保挑色選項按鈕顯示，並設定 leather 按鈕預設被選中
           setActiveButton(document.getElementById('leather'));
         }
@@ -715,13 +714,9 @@ function callbackTrack(detectState){
     const scrollingText = document.getElementById('scrollingText');
     if (_settings.marqueeState) {
       if (!_isMarqueeShown) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const gParam = urlParams.get('g');
-        const color = _settings.currentWatchColor || 'gold';
-        const studyVersion = _settings.currentStudy || 'study01';
-        // 內容根據 studyVersion, g 參數與目前顏色
-        if (gParam && marqueeData[studyVersion] && marqueeData[studyVersion][gParam] && marqueeData[studyVersion][gParam][color]) {
-          const jsonPath = marqueeData[studyVersion][gParam][color];
+        // 內容根據 currentStudy, g 參數與目前顏色
+        if (gParam && marqueeData[currentStudy] && marqueeData[currentStudy][gParam] && marqueeData[currentStudy][gParam][color]) {
+          const jsonPath = marqueeData[currentStudy][gParam][color];
           console.log('Loading marquee data from:', jsonPath);
           fetch(jsonPath)
             .then(response => response.json())
@@ -735,7 +730,7 @@ function callbackTrack(detectState){
             .catch(error => console.error('Error loading messages:', error));
         } else {
           // 若無對應資料則隱藏跑馬燈
-          console.log('No marquee data found for:', studyVersion, gParam, color);
+          console.log('No marquee data found for:', currentStudy, gParam, color);
           if (scrollingText) scrollingText.style.display = 'none';
           _isMarqueeShown = true;
         }
@@ -774,17 +769,11 @@ function changeWatchColor(color) {
     setActiveButton(document.getElementById(color));
   }
   
-  // 取得網址參數
-  const urlParams = new URLSearchParams(window.location.search);
-  const gParam = urlParams.get('g'); // 例如 'uti' 或 'hed'
-  const studyParam = urlParams.get('s'); // 研究版本參數
-  // 使用當前研究版本 (從handleUrlParameters中獲取)
-  const currentStudy = _settings.currentStudy || 'study01';
+  const gParam = _settings.currentGroup; // 例如 'uti' 或 'hed'
+  const currentStudy = _settings.currentStudy || 'study01'; // 研究版本參數
   
   // 檢查study參數，若 s 參數是上述 study 情境，才需要 scrollingText 和 WatchDescription
-  if (studyParam === '1' || studyParam === '2' || 
-    studyParam === '5' || studyParam === '5vn' || 
-    studyParam === '6' || (studyParam === '7' && gParam === 'ew') || (studyParam === '8' && gParam === 'ew')) {
+  if (currentStudy=='study01' || currentStudy=='study02' || currentStudy=='study05' || currentStudy=='study05vn' || currentStudy=='study06' || (currentStudy=='study07' && gParam === 'ew') || (currentStudy=='study08' && gParam === 'ew')) {
     
     // 若 g 參數與 color 都存在於 marqueeData 中
     if (gParam && marqueeData[currentStudy] && marqueeData[currentStudy][gParam] && marqueeData[currentStudy][gParam][color]) {
@@ -810,8 +799,7 @@ function changeWatchColor(color) {
   } 
 
   // 若study情境是3, 4, 7, 8, 9，需要依照點選 color 更新 videoId 以播放不同影片
-  if (studyParam === '3' || studyParam === '4' || 
-    (studyParam === '7' && gParam === 'av') || (studyParam === '8' && gParam === 'av') || studyParam === '9') {
+  if (currentStudy=='study03' || currentStudy=='study04' || (currentStudy=='study07' && gParam === 'av') || (currentStudy=='study08' && gParam === 'av') || currentStudy=='study09') {
     // 根據 gParam 和 color 取得對應的影片 ID
     let videoId;
     if (videoData[gParam] && videoData[gParam][color]) {
@@ -897,9 +885,12 @@ function handleUrlParameters() {
   }  else {
     _settings.currentStudy = 'study01'; // 預設使用study01
   }
+
+  // 處理Group參數 g
+  _settings.currentGroup = urlParams.get('g'); // 例如 'uti' 或 'hed' 或 'comm' 或 'v2026'
+  const gParam = _settings.currentGroup;
   
   // 處理跑馬燈參數 c
-  const gParam = urlParams.get('g'); // 例如 'uti' 或 'hed' 或 'comm' 或 'v2026'
   const commentId = urlParams.get('c');
   _settings.marqueeState = commentId ? commentId : null;
   
@@ -927,11 +918,10 @@ function handleUrlParameters() {
   }
   
   // 載入初始手錶描述，需根據影片設定中的 _settings.currentWatchColor 控制 color
-  const color = _settings.currentWatchColor;
   if ((studyParam === '1' || studyParam === '2' || 
     studyParam === '5' || studyParam === '5vn' || studyParam === '6' || 
-    (studyParam === '7' && gParam === 'ew') || studyParam === '8') && gParam) {
-    loadWatchDescription(_settings.currentStudy, gParam, color);
+    (studyParam === '7' && gParam === 'ew') || (studyParam === '8' && gParam === 'ew')) && gParam) {
+    loadWatchDescription(_settings.currentStudy, gParam, _settings.currentWatchColor);
   }
 
   console.log('Using study(s) version:', _settings.currentStudy);
