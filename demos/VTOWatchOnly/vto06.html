@@ -372,28 +372,9 @@
           opacity: 1;
         }
       }
-
-      /* 背景音樂：無控制列，僅供程式播放（避免 display:none 以利部分行動瀏覽器） */
-      #musicPlayer {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-        pointer-events: none;
-      }
     </style>
   </head>
   <body>
-
-    <!-- 背景音樂（無控制項）；需使用者曾於此頁觸控／點擊後才會開始播放 -->
-    <audio id="musicPlayer" loop playsinline preload="auto">
-      <source src="" type="audio/mpeg">
-    </audio>
 
     <div id='canvases'>
       <!-- Canvas displayed above, with the THREE.js scene -->
@@ -461,7 +442,7 @@
     
     <!-- Survey Button Wrapper -->
     <div id="surveyButtonWrapper" class="control-wrapper">
-      <a href="https://2057.api.gosu.bar/customize/SurveyF036toF039?from=study2b" class="unified-btn" target="_blank">前往填寫問卷</a>
+      <a href="https://2057.api.gosu.bar/customize/Survey113b1" class="unified-btn" target="_blank">前往填寫問卷</a>
     </div>
   </body>
 </html>
