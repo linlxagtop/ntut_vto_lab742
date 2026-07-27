@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>實驗流程說明</title>
+  <style>
+    body {
+      font-family: "微軟正黑體", sans-serif;
+      background-color: #f8f8f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    .container {
+      background-color: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+      margin: 20px;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 24px;
+      font-size: 28px;
+    }
+
+    p {
+      color: #555;
+      line-height: 1.6;
+      font-size: 18px;
+      margin-bottom: 40px;
+    }
+
+    .start-btn {
+      background-color: #0078d4;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .start-btn:hover {
+      background-color: #005fa3;
+    }
+    
+    /* 手機版樣式 */
+    @media (max-width: 768px) {
+      .container {
+        padding: 25px;
+        width: 85%;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+      
+      p {
+        font-size: 16px;
+        margin-bottom: 30px;
+      }
+      
+      .start-btn {
+        padding: 16px 32px;
+        font-size: 18px;
+        width: 80%;
+      }
+    }
+    
+    /* 特小螢幕樣式 */
+    @media (max-width: 375px) {
+      .container {
+        padding: 20px;
+        width: 90%;
+      }
+      
+      h1 {
+        font-size: 22px;
+      }
+      
+      p {
+        font-size: 16px;
+      }
+      
+      .start-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>實驗情境說明</h1>
+    <p style="text-align: left;">
+      連續下了將近一個禮拜的雨天，原本計畫好要在這個假日去實體店面購買面試要用的手錶，若是陰雨綿綿那還好，但是現在外頭實在雷雨交加，一出門肯定全身溼透的，可是手錶這禮拜再不買就來不及了。您嘆了一口氣攤在沙發，拿起手邊的行動裝置，打開品牌購物網站，打算嘗試線上購物的方式挑選心儀的手錶。一進到網站中你就看到了前陣子最心動的款式，你毫不猶豫地點進首頁的廣告連結中…<br>
+    </p>
+    <button class="start-btn" onclick="startExperiment()">繼續</button>
+  </div>
+
+  <script>
+    function startExperiment() {
+      const pages = [
+        "../vto10.html?s=10&g=C&res=materials"
+      ];
+      const randomIndex = Math.floor(Math.random() * pages.length);
+      const selectedPage = pages[randomIndex];
+      window.location.href = selectedPage;
+    }
+  </script>
+</body>
+</html>

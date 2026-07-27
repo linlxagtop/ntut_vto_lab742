@@ -182,6 +182,28 @@ const marqueeData = {
       'happy': 'study07/study07_happy.json',
       'silver': 'study07/study07_silver.json'
     }
+  },
+  'study10': {
+    'nasr': {
+      'leather': 'study10/study10_Canterbury_nasr.json',
+      'happy': 'study10/study10_Glasgow_nasr.json',
+      'silver': 'study10/study10_SaintMawes_nasr.json'
+    },
+    'ansr': {
+      'leather': 'study10/study10_Canterbury_ansr.json',
+      'happy': 'study10/study10_Canterbury_ansr.json',
+      'silver': 'study10/study10_Canterbury_ansr.json'
+    },
+    'hsd': {
+      'leather': 'study10/study10_Canterbury_hsd.json',
+      'happy': 'study10/study10_Canterbury_hsd.json',
+      'silver': 'study10/study10_Canterbury_hsd.json'
+    },
+    'lsd': {
+      'leather': 'study10/study10_Canterbury_lsd.json',
+      'happy': 'study10/study10_Canterbury_lsd.json',
+      'silver': 'study10/study10_Canterbury_lsd.json'
+    },
   }
 }
 
@@ -194,7 +216,11 @@ const videoData = {
     'ClassicGlasgow_High', 'ClassicGlasgow_Low',
     'Welcome_High', 'Welcome_Low',
     'ClassicStMawes_leather', 'ClassicSheffield_happy', 'Petite_silver',
-    'ClassicStMawes_leather_mus', 'ClassicSheffield_happy_mus', 'Petite_silver_mus'
+    'ClassicStMawes_leather_mus', 'ClassicSheffield_happy_mus', 'Petite_silver_mus',
+    'AW','A1','A2','A3',
+    'BW','B1','B2','B3',
+    'CW','C1','C2','C3',
+    'D1','D2','D3',
   ],
   // 預設影片組
   comm: {
@@ -250,6 +276,26 @@ const videoData = {
     leather: 'ClassicStMawes_leather',
     happy: 'ClassicSheffield_happy',
     silver: 'Petite_silver'
+  },
+  A: {
+    leather: 'A1',
+    happy: 'A2',
+    silver: 'A3'
+  },
+  B: {
+    leather: 'B1',
+    happy: 'B2',
+    silver: 'B3'
+  },
+  C: {
+    leather: 'C1',
+    happy: 'C2',
+    silver: 'C3'
+  },
+  D: {
+    leather: 'D1',
+    happy: 'D2',
+    silver: 'D3'
   },
   // 預設影片
   default: 'Welcome_High'
@@ -564,9 +610,10 @@ function hide_instructions(){
     // 播放對應的影片
     _isVideoStarted = playVideo(videoId);
   }
-  // 若study情境是3, 4, 7, 8, 9，需要依照點選 color 更新 videoId 以播放不同影片
+  // 若study情境是3, 4, 7, 8, 9, 10，需要依照點選 color 更新 videoId 以播放不同影片
   else if (studyParam === '3' || studyParam === '4' || 
-    (studyParam === '7' && gParam === 'av') || (studyParam === '8' && gParam === 'av') || studyParam === '9') {
+    (studyParam === '7' && gParam === 'av') || (studyParam === '8' && gParam === 'av') || studyParam === '9'
+    || studyParam === '10') {
     // 根據 gParam 和 color 取得對應的影片 ID
     let videoId;
     if (videoData[gParam] && videoData[gParam][color]) {
@@ -595,7 +642,8 @@ function hide_instructions(){
     // 顯示手錶描述
     if ((currentStudy=='study01' || currentStudy=='study02' || 
       currentStudy=='study05' || currentStudy=='study05vn' || currentStudy=='study06' || 
-      (studyParam === '7' && gParam === 'ew') || (studyParam === '8' && gParam === 'ew')) && watchDescription && currentWatchDescription) {
+      (studyParam === '7' && gParam === 'ew') || (studyParam === '8' && gParam === 'ew') || (studyParam === '10' && gParam === ('nasr' || 'ansr' || 'hsd' || 'lsd')) 
+      && watchDescription && currentWatchDescription)) {
       if (descriptionContainer) {
         descriptionContainer.style.display = 'block';
       }
@@ -705,7 +753,8 @@ function callbackTrack(detectState){
           // 確保挑色選項按鈕顯示，並設定 gold 按鈕預設被選中
           setActiveButton(document.getElementById('gold'));
         }
-        if (currentStudy=='study05' || currentStudy=='study05vn' || currentStudy=='study06' || (currentStudy=='study07' && gParam === 'ew') || (currentStudy=='study08' && gParam === 'ew')) {
+        if (currentStudy=='study05' || currentStudy=='study05vn' || currentStudy=='study06' || (currentStudy=='study07' && gParam === 'ew') || (currentStudy=='study08' && gParam === 'ew')
+          || currentStudy === '10') {
           // 確保挑色選項按鈕顯示，並設定 leather 按鈕預設被選中
           setActiveButton(document.getElementById('leather'));
         }
@@ -776,7 +825,8 @@ function changeWatchColor(color) {
   const currentStudy = _settings.currentStudy || 'study01'; // 研究版本參數
   
   // 檢查study參數，若 s 參數是上述 study 情境，才需要 scrollingText 和 WatchDescription
-  if (currentStudy=='study01' || currentStudy=='study02' || currentStudy=='study05' || currentStudy=='study05vn' || currentStudy=='study06' || (currentStudy=='study07' && gParam === 'ew') || (currentStudy=='study08' && gParam === 'ew')) {
+  if (currentStudy=='study01' || currentStudy=='study02' || currentStudy=='study05' || currentStudy=='study05vn' || currentStudy=='study06' || (currentStudy=='study07' && gParam === 'ew') || (currentStudy=='study08' && gParam === 'ew')
+    || (currentStudy === '10' && gParam === ('nasr' || 'ansr' || 'hsd' || 'lsd'))) {
     
     // 若 g 參數與 color 都存在於 marqueeData 中
     if (gParam && marqueeData[currentStudy] && marqueeData[currentStudy][gParam] && marqueeData[currentStudy][gParam][color]) {
@@ -801,8 +851,9 @@ function changeWatchColor(color) {
     loadWatchDescription(currentStudy, gParam, color);
   } 
 
-  // 若study情境是3, 4, 7, 8, 9，需要依照點選 color 更新 videoId 以播放不同影片
-  if (currentStudy=='study03' || currentStudy=='study04' || (currentStudy=='study07' && gParam === 'av') || (currentStudy=='study08' && gParam === 'av') || currentStudy=='study09') {
+  // 若study情境是3, 4, 7, 8, 9, 10，需要依照點選 color 更新 videoId 以播放不同影片
+  if (currentStudy=='study03' || currentStudy=='study04' || (currentStudy=='study07' && gParam === 'av') || (currentStudy=='study08' && gParam === 'av') || currentStudy=='study09'
+    || currentStudy === '10') {
     // 根據 gParam 和 color 取得對應的影片 ID
     let videoId;
     if (videoData[gParam] && videoData[gParam][color]) {
@@ -885,6 +936,8 @@ function handleUrlParameters() {
     _settings.currentStudy = 'study08';
   } else if (studyParam === '9') {
     _settings.currentStudy = 'study09';
+  } else if (studyParam === '10') {
+    _settings.currentStudy = 'study10';
   }  else {
     _settings.currentStudy = 'study01'; // 預設使用study01
   }
@@ -909,7 +962,7 @@ function handleUrlParameters() {
     _settings.currentWatchColor = 'gold';
     videoPlayer.style.display = 'block';
   } 
-  else if (studyParam === '7' && gParam === 'av' || studyParam === '8' || studyParam === '9') {
+  else if (studyParam === '7' && gParam === 'av' || studyParam === '8' || studyParam === '9' || studyParam === '10') {
     _settings.currentWatchColor = 'leather';
     videoPlayer.style.display = 'block';
   } 
@@ -923,7 +976,9 @@ function handleUrlParameters() {
   // 載入初始手錶描述，需根據影片設定中的 _settings.currentWatchColor 控制 color
   if ((studyParam === '1' || studyParam === '2' || 
     studyParam === '5' || studyParam === '5vn' || studyParam === '6' || 
-    (studyParam === '7' && gParam === 'ew') || (studyParam === '8' && gParam === 'ew')) && gParam) {
+    (studyParam === '7' && gParam === 'ew') || (studyParam === '8' && gParam === 'ew') || 
+    (studyParam === '10' && gParam === ('nasr' || 'ansr' || 'hsd' || 'lsd'))) 
+    && gParam) {
     loadWatchDescription(_settings.currentStudy, gParam, _settings.currentWatchColor);
   }
 
