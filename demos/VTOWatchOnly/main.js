@@ -613,7 +613,7 @@ function hide_instructions(){
   // 若study情境是3, 4, 7, 8, 9, 10，需要依照點選 color 更新 videoId 以播放不同影片
   else if (studyParam === '3' || studyParam === '4' || 
     (studyParam === '7' && gParam === 'av') || (studyParam === '8' && gParam === 'av') || studyParam === '9'
-    || (studyParam === '10' && gParam === ('A' || 'B' || 'C' || 'D')) ) {
+    || (studyParam === '10' && ['A', 'B', 'C', 'D'].includes(gParam)) ) {
     // 根據 gParam 和 color 取得對應的影片 ID
     let videoId;
     if (videoData[gParam] && videoData[gParam][color]) {
@@ -643,7 +643,7 @@ function hide_instructions(){
     if ((currentStudy=='study01' || currentStudy=='study02' || 
       currentStudy=='study05' || currentStudy=='study05vn' || currentStudy=='study06' || 
       (studyParam === '7' && gParam === 'ew') || (studyParam === '8' && gParam === 'ew') || 
-      (studyParam === '10' && gParam === ('nasr' || 'ansr' || 'hsd' || 'lsd')) 
+      (studyParam === '10' && ['nasr', 'ansr', 'hsd', 'lsd'].includes(gParam)) 
       && watchDescription && currentWatchDescription)) {
       if (descriptionContainer) {
         descriptionContainer.style.display = 'block';
@@ -827,7 +827,7 @@ function changeWatchColor(color) {
   
   // 檢查study參數，若 s 參數是上述 study 情境，才需要 scrollingText 和 WatchDescription
   if (currentStudy=='study01' || currentStudy=='study02' || currentStudy=='study05' || currentStudy=='study05vn' || currentStudy=='study06' || (currentStudy=='study07' && gParam === 'ew') || (currentStudy=='study08' && gParam === 'ew')
-    || (currentStudy === '10' && gParam === ('nasr' || 'ansr' || 'hsd' || 'lsd'))) {
+    || (currentStudy === '10' && ['nasr', 'ansr', 'hsd', 'lsd'].includes(gParam))) {
     
     // 若 g 參數與 color 都存在於 marqueeData 中
     if (gParam && marqueeData[currentStudy] && marqueeData[currentStudy][gParam] && marqueeData[currentStudy][gParam][color]) {
@@ -854,7 +854,7 @@ function changeWatchColor(color) {
 
   // 若study情境是3, 4, 7, 8, 9, 10，需要依照點選 color 更新 videoId 以播放不同影片
   if (currentStudy=='study03' || currentStudy=='study04' || (currentStudy=='study07' && gParam === 'av') || (currentStudy=='study08' && gParam === 'av') || currentStudy=='study09'
-    || (currentStudy === 'study10' && gParam === ('A' || 'B' || 'C' || 'D')) ) {
+    || (currentStudy === 'study10' && ['A', 'B', 'C', 'D'].includes(gParam)) ) {
     // 根據 gParam 和 color 取得對應的影片 ID
     let videoId;
     if (videoData[gParam] && videoData[gParam][color]) {
@@ -978,7 +978,7 @@ function handleUrlParameters() {
   if ((studyParam === '1' || studyParam === '2' || 
     studyParam === '5' || studyParam === '5vn' || studyParam === '6' || 
     (studyParam === '7' && gParam === 'ew') || (studyParam === '8' && gParam === 'ew') || 
-    (studyParam === '10' && gParam === ('nasr' || 'ansr' || 'hsd' || 'lsd'))) 
+    (studyParam === '10' && ['nasr', 'ansr', 'hsd', 'lsd'].includes(gParam))) 
     && gParam) {
     loadWatchDescription(_settings.currentStudy, gParam, _settings.currentWatchColor);
   }
