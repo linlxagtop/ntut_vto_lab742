@@ -613,7 +613,7 @@ function hide_instructions(){
   // 若study情境是3, 4, 7, 8, 9, 10，需要依照點選 color 更新 videoId 以播放不同影片
   else if (studyParam === '3' || studyParam === '4' || 
     (studyParam === '7' && gParam === 'av') || (studyParam === '8' && gParam === 'av') || studyParam === '9'
-    || studyParam === '10') {
+    || (studyParam === '10' && gParam === ('A' || 'B' || 'C' || 'D')) ) {
     // 根據 gParam 和 color 取得對應的影片 ID
     let videoId;
     if (videoData[gParam] && videoData[gParam][color]) {
@@ -642,7 +642,8 @@ function hide_instructions(){
     // 顯示手錶描述
     if ((currentStudy=='study01' || currentStudy=='study02' || 
       currentStudy=='study05' || currentStudy=='study05vn' || currentStudy=='study06' || 
-      (studyParam === '7' && gParam === 'ew') || (studyParam === '8' && gParam === 'ew') || (studyParam === '10' && gParam === ('nasr' || 'ansr' || 'hsd' || 'lsd')) 
+      (studyParam === '7' && gParam === 'ew') || (studyParam === '8' && gParam === 'ew') || 
+      (studyParam === '10' && gParam === ('nasr' || 'ansr' || 'hsd' || 'lsd')) 
       && watchDescription && currentWatchDescription)) {
       if (descriptionContainer) {
         descriptionContainer.style.display = 'block';
@@ -853,7 +854,7 @@ function changeWatchColor(color) {
 
   // 若study情境是3, 4, 7, 8, 9, 10，需要依照點選 color 更新 videoId 以播放不同影片
   if (currentStudy=='study03' || currentStudy=='study04' || (currentStudy=='study07' && gParam === 'av') || (currentStudy=='study08' && gParam === 'av') || currentStudy=='study09'
-    || currentStudy === '10') {
+    || (currentStudy === 'study10' && gParam === ('A' || 'B' || 'C' || 'D')) ) {
     // 根據 gParam 和 color 取得對應的影片 ID
     let videoId;
     if (videoData[gParam] && videoData[gParam][color]) {
