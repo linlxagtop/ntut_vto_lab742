@@ -258,10 +258,20 @@
         transform: scale(0.95);
       }
 
+      /* 錶款按鈕（海軍藍與白相間-布料錶帶） */
+      #gblue {
+        background: linear-gradient(145deg, #4a6fa5, #1e3a5f 42%, #0d2137);
+        box-shadow: 0 4px 8px rgba(30, 58, 95, 0.35);
+      }
       /* 錶款按鈕（玫瑰金-皮革錶帶） */
       #leather {
         background: linear-gradient(145deg, #f0d4cf, #c9959e 42%, #a56b72);
         box-shadow: 0 4px 8px rgba(165, 107, 114, 0.35);
+      }
+      /* 錶款按鈕（酒紅色與白藍相間-布料錶帶） */
+      #red {
+        background: linear-gradient(145deg, #9b3d4a, #722f37 42%, #4a1f24);
+        box-shadow: 0 4px 8px rgba(114, 47, 55, 0.35);
       }
       /* 錶款按鈕（黑色-矽膠錶帶） */
       #happy {
@@ -440,9 +450,9 @@
 
       <!-- 顏色選擇按鈕 -->
       <div class="color-buttons">
-        <button id="leather" class="color-button active" onclick="changeWatchColor('leather')"></button>
-        <button id="happy" class="color-button" onclick="changeWatchColor('happy')"></button>
-        <button id="silver" class="color-button" onclick="changeWatchColor('silver')"></button>
+        <button id="gblue" class="color-button active" onclick="changeWatchColor('gblue')"></button>
+        <button id="leather" class="color-button" onclick="changeWatchColor('leather')"></button>
+        <button id="red" class="color-button" onclick="changeWatchColor('red')"></button>
       </div>
     </div>
 
