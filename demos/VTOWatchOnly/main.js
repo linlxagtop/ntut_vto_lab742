@@ -98,11 +98,11 @@ const _settings = {
     'silver': 'assets/watchDw_silver.glb'
   },*/
   watchModelsMaterials: {
+    'red': 'assets/watchDw_red.glb',
     'gblue': 'assets/watchDw_gblue.glb',
-    'leather': 'assets/watchDw_leather.glb',
-    'red': 'assets/watchDw_red.glb'
+    'leather': 'assets/watchDw_leather.glb'
   },
-  currentWatchColor: 'gblue', // 預設款式
+  currentWatchColor: 'red', // 預設款式
   currentStudy: '',
   currentGroup: ''
 };
@@ -190,24 +190,24 @@ const marqueeData = {
   },
   'study10': {
     'nasr': {
-      'gblue': 'study10/study10_Canterbury_nasr.json',
-      'leather': 'study10/study10_Glasgow_nasr.json',
-      'red': 'study10/study10_SaintMawes_nasr.json'
+      'red': 'study10/study10_Canterbury_nasr.json',
+      'gblue': 'study10/study10_Glasgow_nasr.json',
+      'leather': 'study10/study10_SaintMawes_nasr.json'
     },
     'ansr': {
+      'red': 'study10/study10_Canterbury_ansr.json',
       'gblue': 'study10/study10_Canterbury_ansr.json',
-      'leather': 'study10/study10_Canterbury_ansr.json',
-      'red': 'study10/study10_Canterbury_ansr.json'
+      'leather': 'study10/study10_Canterbury_ansr.json'
     },
     'hsd': {
+      'red': 'study10/study10_Canterbury_hsd.json',
       'gblue': 'study10/study10_Canterbury_hsd.json',
-      'leather': 'study10/study10_Canterbury_hsd.json',
-      'red': 'study10/study10_Canterbury_hsd.json'
+      'leather': 'study10/study10_Canterbury_hsd.json'
     },
     'lsd': {
+      'red': 'study10/study10_Canterbury_lsd.json',
       'gblue': 'study10/study10_Canterbury_lsd.json',
-      'leather': 'study10/study10_Canterbury_lsd.json',
-      'red': 'study10/study10_Canterbury_lsd.json'
+      'leather': 'study10/study10_Canterbury_lsd.json'
     },
   }
 }
@@ -283,24 +283,24 @@ const videoData = {
     silver: 'Petite_silver'
   },
   A: {
-    gblue: 'A1',
-    leather: 'A2',
-    red: 'A3'
+    red: 'A1',
+    gblue: 'A2',
+    leather: 'A3'
   },
   B: {
-    gblue: 'B1',
-    leather: 'B2',
-    red: 'B3'
+    red: 'B1',
+    gblue: 'B2',
+    leather: 'B3'
   },
   C: {
-    gblue: 'C1',
-    leather: 'C2',
-    red: 'C3'
+    red: 'C1',
+    gblue: 'C2',
+    leather: 'C3'
   },
   D: {
-    gblue: 'D1',
-    leather: 'D2',
-    red: 'D3'
+    red: 'D1',
+    gblue: 'D2',
+    leather: 'D3'
   },
   // 預設影片
   default: 'Welcome_High'
@@ -761,8 +761,8 @@ function callbackTrack(detectState){
         }
         if (currentStudy=='study05' || currentStudy=='study05vn' || currentStudy=='study06' || (currentStudy=='study07' && gParam === 'ew') || (currentStudy=='study08' && gParam === 'ew')
           || currentStudy === '10') {
-          // 確保挑色選項按鈕顯示，並設定 gblue 按鈕預設被選中
-          setActiveButton(document.getElementById('gblue'));
+          // 確保挑色選項按鈕顯示，並設定 red 按鈕預設被選中
+          setActiveButton(document.getElementById('red'));
         }
         watchDescription.style.display = 'block';
       }
@@ -973,7 +973,7 @@ function handleUrlParameters() {
     videoPlayer.style.display = 'block';
   }
   else if ( studyParam === '10') {
-    _settings.currentWatchColor = 'gblue';
+    _settings.currentWatchColor = 'red';
     videoPlayer.style.display = 'block';
   } 
   else {
