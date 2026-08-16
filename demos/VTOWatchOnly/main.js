@@ -832,7 +832,7 @@ function changeWatchColor(color) {
   
   // 檢查study參數，若 s 參數是上述 study 情境，才需要 scrollingText 和 WatchDescription
   if (currentStudy=='study01' || currentStudy=='study02' || currentStudy=='study05' || currentStudy=='study05vn' || currentStudy=='study06' || (currentStudy=='study07' && gParam === 'ew') || (currentStudy=='study08' && gParam === 'ew')
-    || (currentStudy === '10' && ['nasr', 'ansr', 'hsd', 'lsd'].includes(gParam))) {
+    || (currentStudy === 'study10' && ['nasr', 'ansr', 'hsd', 'lsd'].includes(gParam))) {
     
     // 若 g 參數與 color 都存在於 marqueeData 中
     if (gParam && marqueeData[currentStudy] && marqueeData[currentStudy][gParam] && marqueeData[currentStudy][gParam][color]) {
