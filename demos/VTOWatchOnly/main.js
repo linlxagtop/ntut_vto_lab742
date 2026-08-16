@@ -739,7 +739,11 @@ function callbackTrack(detectState){
     
     // 啟動倒數計時器（只在第一次偵測到手時啟動）
     if (!_isCountdownStarted) {
-      startCountdownTimer();
+      if(currentStudy === 'study10') {
+        // do nothing
+      } else {
+        startCountdownTimer();
+      }
       _isCountdownStarted = true;
     }
 
