@@ -740,8 +740,11 @@ function callbackTrack(detectState){
     // 啟動倒數計時器（只在第一次偵測到手時啟動）
     if (!_isCountdownStarted) {
       if(currentStudy === 'study10') {
-        // do nothing
+        // 顯示問卷按鈕
+        const surveyButtonWrapper = document.getElementById('surveyButtonWrapper');
+        if (surveyButtonWrapper) surveyButtonWrapper.style.display = 'block';
       } else {
+        // 啟動倒數計時器
         startCountdownTimer();
       }
       _isCountdownStarted = true;
