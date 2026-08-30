@@ -1083,7 +1083,10 @@ function loadWatchDescription(currentStudy = _settings.currentStudy, gParam, col
         updateWatchDescription(description);
         // 儲存描述到設置中，供後續顯示用
         _settings.currentWatchDescription = description;
-        descriptionElement.style.display = 'block';
+        const descriptionElement = document.getElementById('watchDescription');
+        if (descriptionElement) {
+          descriptionElement.style.display = 'block';
+        }
       } else {
         // 若無對應資料則隱藏描述
         console.log('No watch description');
