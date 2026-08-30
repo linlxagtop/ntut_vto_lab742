@@ -760,14 +760,14 @@ function callbackTrack(detectState){
         descriptionContainer.style.display = 'block';
       }
       _isWatchDescriptionShown = true;
-      // 只有study01, study02, study05, study06, study07, study08才顯示手錶描述
+      // 只有study01, study02, study05, study06, study07, study08, study10(hsd, ansr, nasr, lsd)才顯示手錶描述
       if (watchDescription && currentWatchDescription) { 
         if (currentStudy=='study01' || currentStudy=='study02') {
           // 確保挑色選項按鈕顯示，並設定 gold 按鈕預設被選中
           setActiveButton(document.getElementById('gold'));
         }
         if (currentStudy=='study05' || currentStudy=='study05vn' || currentStudy=='study06' || (currentStudy=='study07' && gParam === 'ew') || (currentStudy=='study08' && gParam === 'ew')
-          || currentStudy === '10') {
+          || (currentStudy === 'study10' && ['hsd', 'ansr', 'nasr', 'lsd'].includes(gParam))) {
           // 確保挑色選項按鈕顯示，並設定 red 按鈕預設被選中
           setActiveButton(document.getElementById('red'));
         }
