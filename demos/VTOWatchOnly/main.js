@@ -1077,12 +1077,13 @@ function loadWatchDescription(currentStudy = _settings.currentStudy, gParam, col
   fetch(introJsonPath)
     .then(response => response.json())
     .then(data => {
-      if (data && data[gParam] && data[gParam][color]) {
+      if (data?.[gParam]?.[color]) {
         const description = data[gParam][color];
         console.log('Watch description:', description);
         updateWatchDescription(description);
         // 儲存描述到設置中，供後續顯示用
         _settings.currentWatchDescription = description;
+        descriptionElement.style.display = 'block';
       } else {
         // 若無對應資料則隱藏描述
         console.log('No watch description');
