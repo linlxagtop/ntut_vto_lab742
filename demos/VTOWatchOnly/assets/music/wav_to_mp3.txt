@@ -1,0 +1,2 @@
+ffmpeg -i Wi.AR+Audio-TW-High.wav -c:a libmp3lame -q:a 0 Wi.AR+Audio-TW-High.mp3
+ffmpeg -i Wi.AR+Audio-TW-Low.wav -c:a libmp3lame -q:a 0 Wi.AR+Audio-TW-Low.mp3

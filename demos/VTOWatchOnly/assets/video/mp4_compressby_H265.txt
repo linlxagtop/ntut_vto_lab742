@@ -1,1 +1,7 @@
-ffmpeg -i input.mp4 -c:v libx265 -crf 28 -tag:v hvc1 -c:a aac -movflags +faststart output.mp4
+ffmpeg -i Wi1.AR+Avatar-TW-High.mp4 -c:v libx265 -crf 28 -tag:v hvc1 -c:a aac -movflags +faststart -vf "scale=394:688" Wi1.AR+Avatar-TW-High_.mp4
+
+ffmpeg -i Wi1.AR+Avatar-TW.zi.Lin-High.mp4 -c:v libx265 -crf 28 -tag:v hvc1 -c:a aac -movflags +faststart -vf "scale=394:688" Wi1.AR+Avatar-TW.zi.Lin-High_.mp4
+
+ffmpeg -i Wi2.AR+Avatar-TW-Low.mp4 -c:v libx265 -crf 28 -tag:v hvc1 -c:a aac -movflags +faststart -vf "scale=394:688" Wi2.AR+Avatar-TW-Low_.mp4
+
+ffmpeg -i Wi2.AR+Avatar-TW-zilin-Low.mp4 -c:v libx265 -crf 28 -tag:v hvc1 -c:a aac -movflags +faststart -vf "scale=394:688" Wi2.AR+Avatar-TW-zilin-Low_.mp4

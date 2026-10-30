@@ -226,6 +226,8 @@ const videoData = {
     'BW','B1','B2','B3',
     'CW','C1','C2','C3',
     'D1','D2','D3',
+    'Wi.AR+Avatar-TW-High',
+    'Wi.AR+Avatar-TW.zi.Lin-High',
   ],
   // 預設影片組
   comm: {
@@ -302,6 +304,9 @@ const videoData = {
     gblue: 'D2',
     leather: 'D3'
   },
+  // study11 虛擬人影片（每組固定一支，不隨錶款切換）
+  avat: 'Wi.AR+Avatar-TW-High',
+  avat_zilin: 'Wi.AR+Avatar-TW.zi.Lin-High',
   // 預設影片
   default: 'Welcome_High'
 };
@@ -314,7 +319,7 @@ function playVideo(videoId = 'Welcome_High') {
     const validVideoId = videoData.availableVideos.includes(videoId) ? videoId : videoData.default;
     
     // 設置影片來源並加載
-    videoPlayer.src = `https://ntut-vto-video.zeabur.app/${validVideoId}.mp4`;
+    videoPlayer.src = `https://ntut-vto-video.zeabur.app/${encodeURIComponent(validVideoId)}.mp4`;
     console.log('Play video:', videoPlayer.src);
     videoPlayer.load();
     
@@ -356,12 +361,39 @@ const musicData = {
   silver: 'assets/music/EasyAndFun_mus.mp3'
 };
 
+// study11 音樂情境：每組固定一首，不隨錶款切換
+const study11MusicData = {
+  mu: 'assets/music/Wi.AR+Audio-TW-High.mp3',
+  mu_zilin: 'assets/music/Wi.AR+Audio-TW-zilin-High.mp3'
+};
+
+function isStudy11AvatarGroup(gParam) {
+  return _settings.currentStudy === 'study11' && (gParam === 'avat' || gParam === 'avat_zilin');
+}
+
+function isStudy11MusicGroup(gParam) {
+  return _settings.currentStudy === 'study11' && (gParam === 'mu' || gParam === 'mu_zilin');
+}
+
+function getStudy11VideoId(gParam) {
+  if (gParam === 'avat' || gParam === 'avat_zilin') {
+    return videoData[gParam] || videoData.default;
+  }
+  return videoData.default;
+}
+
 function playMusic(color) {
   const musicPlayer = document.getElementById('musicPlayer');
   if (!musicPlayer) {
     return;
   }
-  const path = musicData[color] || musicData.leather;
+  let path = musicData[color] || musicData.leather;
+  if (_settings.currentStudy === 'study11') {
+    path = study11MusicData[_settings.currentGroup];
+  }
+  if (!path) {
+    return;
+  }
   musicPlayer.loop = true;
   musicPlayer.volume = 0.35;
   musicPlayer.src = path;
@@ -629,7 +661,10 @@ function hide_instructions(){
     
     // 播放對應的影片
     _isVideoStarted = playVideo(videoId);
-  } 
+  }
+  else if (studyParam === '11' && isStudy11AvatarGroup(gParam)) {
+    _isVideoStarted = playVideo(getStudy11VideoId(gParam));
+  }
   // 其他情況不需要影片
   else{
     if (videoPlayer) {
@@ -661,9 +696,12 @@ function hide_instructions(){
     }
   }
   
-  // 3. 處理跑馬燈顯示
+  // 3. 處理跑馬燈顯示（study11 四組皆不使用跑馬燈）
   const scrollingText = document.getElementById('scrollingText');
-  if (_settings.marqueeState) {
+  if (studyParam === '11') {
+    if (scrollingText) scrollingText.style.display = 'none';
+    _isMarqueeShown = true;
+  } else if (_settings.marqueeState) {
     if (!_isMarqueeShown) {
       const gParam = urlParams.get('g');
       const color = _settings.currentWatchColor || 'gold';
@@ -700,6 +738,10 @@ function hide_instructions(){
     playMusic(color);
   }
   */
+  if (studyParam === '11' && isStudy11MusicGroup(gParam) && !_isMusicStarted) {
+    playMusic(color);
+    _isMusicStarted = true;
+  }
 }
 
 
@@ -721,6 +763,7 @@ function change_camera(){
 }
 
 let _isVideoStarted = false;
+let _isMusicStarted = false;
 let _isMarqueeShown = false;
 let _isWatchDescriptionShown = false;
 let _isCountdownStarted = false;
@@ -775,9 +818,12 @@ function callbackTrack(detectState){
       }
     }
     
-    // 跑馬燈顯示處理（只在第一次觸發時載入內容）
+    // 跑馬燈顯示處理（只在第一次觸發時載入內容；study11 不使用）
     const scrollingText = document.getElementById('scrollingText');
-    if (_settings.marqueeState) {
+    if (currentStudy === 'study11') {
+      if (scrollingText) scrollingText.style.display = 'none';
+      _isMarqueeShown = true;
+    } else if (_settings.marqueeState) {
       if (!_isMarqueeShown) {
         // 內容根據 currentStudy, g 參數與目前顏色
         if (gParam && marqueeData[currentStudy] && marqueeData[currentStudy][gParam] && marqueeData[currentStudy][gParam][color]) {
@@ -877,7 +923,13 @@ function changeWatchColor(color) {
     
     // 播放對應的影片
     _isVideoStarted = playVideo(videoId);
-  } 
+  }
+  else if (isStudy11AvatarGroup(gParam)) {
+    // study11 虛擬人影片固定，切換錶款不重播
+    if (!_isVideoStarted) {
+      _isVideoStarted = playVideo(getStudy11VideoId(gParam));
+    }
+  }
   // 不需要影片
   else{
     const videoPlayer = document.getElementById('videoPlayer');
@@ -951,6 +1003,8 @@ function handleUrlParameters() {
     _settings.currentStudy = 'study09';
   } else if (studyParam === '10') {
     _settings.currentStudy = 'study10';
+  } else if (studyParam === '11') {
+    _settings.currentStudy = 'study11';
   }  else {
     _settings.currentStudy = 'study01'; // 預設使用study01
   }
@@ -959,30 +1013,38 @@ function handleUrlParameters() {
   _settings.currentGroup = urlParams.get('g'); // 例如 'uti' 或 'hed' 或 'comm' 或 'v2026'
   const gParam = _settings.currentGroup;
   
-  // 處理跑馬燈參數 c
+  // 處理跑馬燈參數 c（study11 四組皆不使用跑馬燈）
   const commentId = urlParams.get('c');
-  _settings.marqueeState = commentId ? commentId : null;
+  _settings.marqueeState = studyParam === '11' ? null : (commentId ? commentId : null);
   
   // 處理影片參數 v
   const videoId = urlParams.get('v');
+  const videoPlayer = document.getElementById('videoPlayer');
   if (videoId) {
-    const videoPlayer = document.getElementById('videoPlayer');
     _settings.currentWatchColor = 'gold';
-    videoPlayer.style.display = 'block';
+    if (videoPlayer) videoPlayer.style.display = 'block';
   } 
   // 沒有 v 參數可能會因 study 情境需要播放影片
   else if (studyParam === '3' || studyParam === '4') {
     _settings.currentWatchColor = 'gold';
-    videoPlayer.style.display = 'block';
+    if (videoPlayer) videoPlayer.style.display = 'block';
   } 
   else if (studyParam === '7' && gParam === 'av' || studyParam === '8' || studyParam === '9'){
     _settings.currentWatchColor = 'leather';
-    videoPlayer.style.display = 'block';
+    if (videoPlayer) videoPlayer.style.display = 'block';
   }
   else if ( studyParam === '10') {
     _settings.currentWatchColor = 'red';
-    videoPlayer.style.display = 'block';
-  } 
+    if (videoPlayer) videoPlayer.style.display = 'block';
+  }
+  else if (studyParam === '11' && (gParam === 'avat' || gParam === 'avat_zilin')) {
+    _settings.currentWatchColor = 'red';
+    if (videoPlayer) videoPlayer.style.display = 'block';
+  }
+  else if (studyParam === '11') {
+    _settings.currentWatchColor = 'red';
+    if (videoPlayer) videoPlayer.style.display = 'none';
+  }
   else {
     if (videoPlayer) {
       // 隱藏影片播放器

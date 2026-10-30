@@ -13,6 +13,19 @@
 
 This is a research project focused on Virtual Try-On (VTO) and avatar experimentation at National Taipei University of Technology (NTUT). The project explores augmented reality applications for virtual try-on experiences and avatar interactions.
 
+### Study11 進入點（無跑馬燈）
+
+四組皆進入 `demos/VTOWatchOnly/vto11.html?s=11&g=...&res=materials`，偵測到手腕後開始播放對應媒體。音樂組與虛擬人組都可切換三款手錶，但媒體檔固定、不隨錶款更換。
+
+| 進入頁 | 參數 `g` | 媒體 | 說明 |
+| --- | --- | --- | --- |
+| `study11/index_vto_mu.html` 或根目錄 `s11_vto_mu.html` | `mu` | `assets/music/Wi.AR+Audio-TW-High.mp3` | 背景音樂，無影片、無跑馬燈 |
+| `study11/index_vto_mu_zilin.html` 或 `s11_vto_mu_zilin.html` | `mu_zilin` | `assets/music/Wi.AR+Audio-TW-zilin-High.mp3` | 同上 |
+| `study11/index_vto_avat.html` 或 `s11_vto_avat.html` | `avat` | `Wi.AR+Avatar-TW-High.mp4` | 右上角播放器比例 394:688 |
+| `study11/index_vto_avat_zilin.html` 或 `s11_vto_avat_zilin.html` | `avat_zilin` | `Wi.AR+Avatar-TW.zi.Lin-High.mp4` | 同上 |
+
+影片由 `https://ntut-vto-video.zeabur.app/` 載入。總覽頁：`demos/VTOWatchOnly/study11/index.html`。
+
 ## Virtual Try-on ,object manipulation and 3D Model
 
 * Hand VTO:
