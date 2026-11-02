@@ -493,7 +493,7 @@
         if (urlParams.get('s') === '11') {
           // study11 後測：Google 表單預填同一位受試者的 participant_id 與情境 EXID
           const participantId = getParticipantId();
-          const exid = getStoredExid() || gParam;
+          const exid = getStoredExid() || getExidByGroup(gParam);
           if (typeof _settings !== 'undefined') {
             _settings.participantId = participantId;
             _settings.exid = exid;

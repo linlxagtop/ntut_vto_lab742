@@ -14,12 +14,12 @@ const CONFIG = {
   POST_TEST_EXID_ENTRY_KEY: "entry.1374428065" // 後測「情境 ID」的 entry ID
 };
 
-// study11 四個情境：EXID 即 vto11.html 的 g 參數
+// study11 四個情境：EXID 為數字 1~4，對應 vto11.html 的 g 參數與進入頁
 const STUDY11_CONDITIONS = {
-  mu: 's11_vto_mu.html',
-  mu_zilin: 's11_vto_mu_zilin.html',
-  avat: 's11_vto_avat.html',
-  avat_zilin: 's11_vto_avat_zilin.html'
+  1: { g: 'mu', page: 's11_vto_mu.html' },
+  2: { g: 'mu_zilin', page: 's11_vto_mu_zilin.html' },
+  3: { g: 'avat', page: 's11_vto_avat.html' },
+  4: { g: 'avat_zilin', page: 's11_vto_avat_zilin.html' }
 };
 
 const PARTICIPANT_ID_STORAGE_KEY = 'study11_participant_id';
@@ -65,17 +65,27 @@ function getParticipantId() {
 
 // 取得情境 ID：已分派過就沿用（重新整理不會換組），否則隨機分派
 function getOrAssignExid() {
-  let exid = readStoredValue(EXID_STORAGE_KEY);
-  if (!STUDY11_CONDITIONS[exid]) {
-    const ids = Object.keys(STUDY11_CONDITIONS);
+  let exid = getStoredExid();
+  if (!exid) {
+    const ids = Object.keys(STUDY11_CONDITIONS).map(Number);
     exid = ids[Math.floor(Math.random() * ids.length)];
     storeValue(EXID_STORAGE_KEY, exid);
   }
   return exid;
 }
 
+// 讀取已分派的 EXID（數字）；不合法的舊值視為未分派
 function getStoredExid() {
-  return readStoredValue(EXID_STORAGE_KEY);
+  const exid = Number(readStoredValue(EXID_STORAGE_KEY));
+  return STUDY11_CONDITIONS[exid] ? exid : null;
+}
+
+// 由 g 參數反查 EXID（localStorage 沒有 EXID 時的備援）
+function getExidByGroup(gParam) {
+  const exid = Object.keys(STUDY11_CONDITIONS).map(Number).find(function(id) {
+    return STUDY11_CONDITIONS[id].g === gParam;
+  });
+  return exid || null;
 }
 
 // 產生 Google 表單預填連結
