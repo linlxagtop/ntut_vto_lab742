@@ -3,15 +3,13 @@
   - 由 study11/index_vto_*.html（前測）與 vto11.html（後測）共用
 */
 
-// Google 表單設定
-// 若要啟用預填，請改用表單「取得預先填入的連結」產生的長網址（docs.google.com/forms/d/e/.../viewform?usp=pp_url），
-// 並填入「匿名受試者代碼」題目的 entry ID；entry key 留空時只開啟表單、不預填。
+// Google 表單設定：預填連結 + 「匿名受試者代碼」題目的 entry ID
 const CONFIG = {
-  PRE_TEST_FORM_URL: "https://forms.gle/Bvfk3gzNCTrDCJdS9",
-  PRE_TEST_ENTRY_KEY: "", // 前測「匿名受試者代碼」的 entry ID，例如 "entry.1234567"
+  PRE_TEST_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSdYSxWEScKgeCrk2-kWYCI4MMvj6yh7DvusFxftej950hEiPA/viewform?usp=pp_url",
+  PRE_TEST_ENTRY_KEY: "entry.548571719",
 
-  POST_TEST_FORM_URL: "https://forms.gle/WwHLdo1av44sx9Nm6",
-  POST_TEST_ENTRY_KEY: "" // 後測「匿名受試者代碼」的 entry ID，例如 "entry.7654321"
+  POST_TEST_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSfJSIgmMB7gQVtNxnf0l0DcNnY4OhMObF9dVo3itfYeVx9C_A/viewform?usp=pp_url",
+  POST_TEST_ENTRY_KEY: "entry.592418543"
 };
 
 const PARTICIPANT_ID_STORAGE_KEY = 'study11_participant_id';

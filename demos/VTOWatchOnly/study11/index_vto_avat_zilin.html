@@ -105,21 +105,19 @@
   <div class="container">
     <h1>實驗流程說明</h1>
     <p style="text-align: left;">
-      尊敬的顧客您好，歡迎光臨DW手錶，現在您即將進入到DW手錶的購物情境中，請您在觀看完廣告後，依照您最真實的感受，進行問卷之填寫。<br>
+      親愛的參與者您好，感謝您參與本研究！<br>
+      請先填答前測問卷後，再進行ORIENT（東方）腕錶 Web AR 虛擬試戴體驗。並依照畫面與語音指示完成腕錶試戴及錶帶切換後，依真實感受填答體驗後問卷。謝謝您的支持與配合！
     </p>
-    <button class="start-btn" onclick="openPreTest()" style="margin-bottom: 16px;">前往填寫前測問卷</button><br>
-    <button class="start-btn" onclick="startExperiment()">繼續</button>
+    <button class="start-btn" onclick="startExperiment()">開始參與</button>
   </div>
 
   <script src="participant.js"></script>
   <script>
     const participantId = getParticipantId();
 
-    function openPreTest() {
-      window.open(getPreTestUrl(participantId), "_blank");
-    }
-
+    // 開始參與：新分頁開啟前測（預填 PID），本頁進入虛擬試戴
     function startExperiment() {
+      window.open(getPreTestUrl(participantId), "_blank");
       window.location.href = appendParticipantIdToUrl("../vto11.html?s=11&g=avat_zilin&res=materials", participantId);
     }
   </script>
