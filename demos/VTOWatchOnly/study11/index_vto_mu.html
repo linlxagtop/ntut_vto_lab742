@@ -107,12 +107,20 @@
     <p style="text-align: left;">
       尊敬的顧客您好，歡迎光臨DW手錶，現在您即將進入到DW手錶的購物情境中，請您在觀看完廣告後，依照您最真實的感受，進行問卷之填寫。<br>
     </p>
+    <button class="start-btn" onclick="openPreTest()" style="margin-bottom: 16px;">前往填寫前測問卷</button><br>
     <button class="start-btn" onclick="startExperiment()">繼續</button>
   </div>
 
+  <script src="participant.js"></script>
   <script>
+    const participantId = getParticipantId();
+
+    function openPreTest() {
+      window.open(getPreTestUrl(participantId), "_blank");
+    }
+
     function startExperiment() {
-      window.location.href = "../vto11.html?s=11&g=mu&res=materials";
+      window.location.href = appendParticipantIdToUrl("../vto11.html?s=11&g=mu&res=materials", participantId);
     }
   </script>
 </body>

@@ -34,6 +34,7 @@
     <script src="../../helpers/PoseFlipFilter.js"></script>
     
     <!-- INCLUDE MAIN DEMO SCRIPT -->
+    <script src="./study11/participant.js"></script>
     <script src="./main.js"></script>
 
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
@@ -489,7 +490,13 @@
         const gParam = urlParams.get('g');
         const surveyLink = document.getElementById('surveyLink');
         
-        if (gParam === 'av') {
+        if (urlParams.get('s') === '11') {
+          // study11 後測：Google 表單預填同一位受試者的 participant_id
+          const participantId = getParticipantId();
+          if (typeof _settings !== 'undefined') _settings.participantId = participantId;
+          console.log('Using participant id:', participantId);
+          surveyLink.href = getPostTestUrl(participantId);
+        } else if (gParam === 'av') {
           surveyLink.href = 'https://2057.api.gosu.bar/customize/Survey113d2';
         } else {
           // 若是 ew 或無 g 參數，使用預設連結
