@@ -21,7 +21,7 @@ This is a research project focused on Virtual Try-On (VTO) and avatar experiment
 | --- | --- | --- | --- |
 | `study11/index_vto_mu.html` 或根目錄 `s11_vto_mu.html` | `mu` | `assets/music/Wi.AR+Audio-TW-High.mp3` | 背景音樂，無影片、無跑馬燈 |
 | `study11/index_vto_mu_zilin.html` 或 `s11_vto_mu_zilin.html` | `mu_zilin` | `assets/music/Wi.AR+Audio-TW-zilin-High.mp3` | 同上 |
-| `study11/index_vto_avat.html` 或 `s11_vto_avat.html` | `avat` | `Wi.AR+Avatar-TW-High.mp4` | 右上角播放器比例 394:688 |
+| `study11/index_vto_avat.html` 或 `s11_vto_avat.html` | `avat` | `Wi.AR+Avatar-TW-High.mp4` | 右上角播放器比例 468:688 |
 | `study11/index_vto_avat_zilin.html` 或 `s11_vto_avat_zilin.html` | `avat_zilin` | `Wi.AR+Avatar-TW.zi.Lin-High.mp4` | 同上 |
 
 影片由 `https://ntut-vto-video.zeabur.app/` 載入。總覽頁：`demos/VTOWatchOnly/study11/index.html`。

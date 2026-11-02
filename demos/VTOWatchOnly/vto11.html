@@ -148,24 +148,24 @@
         transform: translate(-50%, 0%) rotateY(180deg);
       }
 
-      /* 影片播放器樣式（直屏以 33.33vw 為基礎，比例 394×688） */
+      /* 影片播放器樣式（直屏以 33.33vw 為基礎，比例 468×688） */
       #videoPlayer {
         position: fixed;
         top: 0;
         right: 0;
         width: 33.33vw;
-        height: calc(33.33vw * 688 / 394);
+        height: calc(33.33vw * 688 / 468);
         z-index: 4;
         display: none;
         background: #000;
         object-fit: contain;
       }
 
-      /* 橫屏：寬度改為螢幕 25%，高度依 394×688 比例維持不變 */
+      /* 橫屏：寬度改為螢幕 25%，高度依 468×688 比例維持不變 */
       @media (orientation: landscape) {
         #videoPlayer {
           width: 25vw;
-          height: calc(25vw * 688 / 394);
+          height: calc(25vw * 688 / 468);
         }
       }
 
