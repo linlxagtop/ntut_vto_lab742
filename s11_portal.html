@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <script src="demos/VTOWatchOnly/study11/participant.js"></script>
+</head>
+<body>
+    <p>Redirecting to Study11...</p>
+    <script>
+        // study11 前測完成後的入口：沿用 PID，隨機分派情境 EXID 並存入 localStorage
+        getParticipantId();
+        const exid = getOrAssignExid();
+        window.location.replace(STUDY11_CONDITIONS[exid]);
+    </script>
+</body>
+</html>

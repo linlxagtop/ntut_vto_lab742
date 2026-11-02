@@ -491,11 +491,15 @@
         const surveyLink = document.getElementById('surveyLink');
         
         if (urlParams.get('s') === '11') {
-          // study11 後測：Google 表單預填同一位受試者的 participant_id
+          // study11 後測：Google 表單預填同一位受試者的 participant_id 與情境 EXID
           const participantId = getParticipantId();
-          if (typeof _settings !== 'undefined') _settings.participantId = participantId;
-          console.log('Using participant id:', participantId);
-          surveyLink.href = getPostTestUrl(participantId);
+          const exid = getStoredExid() || gParam;
+          if (typeof _settings !== 'undefined') {
+            _settings.participantId = participantId;
+            _settings.exid = exid;
+          }
+          console.log('Using participant id:', participantId, 'exid:', exid);
+          surveyLink.href = getPostTestUrl(participantId, exid);
         } else if (gParam === 'av') {
           surveyLink.href = 'https://2057.api.gosu.bar/customize/Survey113d2';
         } else {

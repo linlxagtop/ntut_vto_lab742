@@ -115,9 +115,7 @@
   <script>
     const participantId = getParticipantId();
 
-    // 開始參與：新分頁開啟前測（預填 PID），本頁進入虛擬試戴
     function startExperiment() {
-      window.open(getPreTestUrl(participantId), "_blank");
       window.location.href = appendParticipantIdToUrl("../vto11.html?s=11&g=mu_zilin&res=materials", participantId);
     }
   </script>

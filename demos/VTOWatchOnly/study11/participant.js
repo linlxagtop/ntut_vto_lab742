@@ -1,6 +1,7 @@
 /*
   study11 前後測問卷：匿名受試者 ID（Participant ID）產生與 Google 表單預填連結
-  - 由 study11/index_vto_*.html（前測）與 vto11.html（後測）共用
+  - 流程：study11/start.html（產生 PID → 前測）→ s11_portal.html（隨機分派 EXID）
+    → s11_vto_*.html → vto11.html（PID + EXID → 後測）
 */
 
 // Google 表單設定：預填連結 + 「匿名受試者代碼」題目的 entry ID
@@ -9,10 +10,20 @@ const CONFIG = {
   PRE_TEST_ENTRY_KEY: "entry.548571719",
 
   POST_TEST_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSfJSIgmMB7gQVtNxnf0l0DcNnY4OhMObF9dVo3itfYeVx9C_A/viewform?usp=pp_url",
-  POST_TEST_ENTRY_KEY: "entry.592418543"
+  POST_TEST_ENTRY_KEY: "entry.592418543",
+  POST_TEST_EXID_ENTRY_KEY: "entry.1374428065" // 後測「情境 ID」的 entry ID
+};
+
+// study11 四個情境：EXID 即 vto11.html 的 g 參數
+const STUDY11_CONDITIONS = {
+  mu: 's11_vto_mu.html',
+  mu_zilin: 's11_vto_mu_zilin.html',
+  avat: 's11_vto_avat.html',
+  avat_zilin: 's11_vto_avat_zilin.html'
 };
 
 const PARTICIPANT_ID_STORAGE_KEY = 'study11_participant_id';
+const EXID_STORAGE_KEY = 'study11_exid';
 
 function generateParticipantId() {
   let uuid;
@@ -25,31 +36,46 @@ function generateParticipantId() {
   return 'usr_' + uuid.replace(/-/g, '').slice(0, 8);
 }
 
-function readStoredParticipantId() {
+function readStoredValue(key) {
   try {
-    return localStorage.getItem(PARTICIPANT_ID_STORAGE_KEY) || sessionStorage.getItem(PARTICIPANT_ID_STORAGE_KEY);
+    return localStorage.getItem(key) || sessionStorage.getItem(key);
   } catch (e) {
     return null;
   }
 }
 
-function storeParticipantId(pid) {
+function storeValue(key, value) {
   try {
-    localStorage.setItem(PARTICIPANT_ID_STORAGE_KEY, pid);
+    localStorage.setItem(key, value);
   } catch (e) {
-    try { sessionStorage.setItem(PARTICIPANT_ID_STORAGE_KEY, pid); } catch (e2) {}
+    try { sessionStorage.setItem(key, value); } catch (e2) {}
   }
 }
 
 // 取得受試者 ID：網址參數 pid / participant_id → localStorage → 新產生
 function getParticipantId() {
   const urlParams = new URLSearchParams(window.location.search);
-  let pid = urlParams.get('pid') || urlParams.get('participant_id') || readStoredParticipantId();
+  let pid = urlParams.get('pid') || urlParams.get('participant_id') || readStoredValue(PARTICIPANT_ID_STORAGE_KEY);
   if (!pid) {
     pid = generateParticipantId();
   }
-  storeParticipantId(pid);
+  storeValue(PARTICIPANT_ID_STORAGE_KEY, pid);
   return pid;
+}
+
+// 取得情境 ID：已分派過就沿用（重新整理不會換組），否則隨機分派
+function getOrAssignExid() {
+  let exid = readStoredValue(EXID_STORAGE_KEY);
+  if (!STUDY11_CONDITIONS[exid]) {
+    const ids = Object.keys(STUDY11_CONDITIONS);
+    exid = ids[Math.floor(Math.random() * ids.length)];
+    storeValue(EXID_STORAGE_KEY, exid);
+  }
+  return exid;
+}
+
+function getStoredExid() {
+  return readStoredValue(EXID_STORAGE_KEY);
 }
 
 // 產生 Google 表單預填連結
@@ -71,6 +97,7 @@ function getPreTestUrl(participantId) {
   return buildPrefilledFormUrl(CONFIG.PRE_TEST_FORM_URL, CONFIG.PRE_TEST_ENTRY_KEY, participantId);
 }
 
-function getPostTestUrl(participantId) {
-  return buildPrefilledFormUrl(CONFIG.POST_TEST_FORM_URL, CONFIG.POST_TEST_ENTRY_KEY, participantId);
+function getPostTestUrl(participantId, exid) {
+  const url = buildPrefilledFormUrl(CONFIG.POST_TEST_FORM_URL, CONFIG.POST_TEST_ENTRY_KEY, participantId);
+  return buildPrefilledFormUrl(url, CONFIG.POST_TEST_EXID_ENTRY_KEY, exid);
 }
