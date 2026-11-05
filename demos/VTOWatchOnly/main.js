@@ -1253,4 +1253,11 @@ function startCountdownTimer() {
   }, 1000);
 }
 
-window.addEventListener('load', main);
+window.addEventListener('load', function () {
+  // 有載入 study11/camera-permission.js 的頁面（vto11.html）需先取得相機權限才啟動 AR
+  if (typeof ensureCameraPermission === 'function') {
+    ensureCameraPermission().then(main);
+  } else {
+    main();
+  }
+});
