@@ -406,6 +406,32 @@ function playMusic(color) {
   }
 }
 
+// 離開頁面（切換分頁、App 退到背景、關閉頁面）時暫停背景音樂，回到頁面後再繼續
+let _isMusicPausedByHidden = false;
+
+function pauseMusicOnLeave() {
+  const musicPlayer = document.getElementById('musicPlayer');
+  if (musicPlayer && !musicPlayer.paused) {
+    musicPlayer.pause();
+    _isMusicPausedByHidden = true;
+  }
+}
+
+document.addEventListener('visibilitychange', function () {
+  if (document.hidden) {
+    pauseMusicOnLeave();
+    return;
+  }
+  const musicPlayer = document.getElementById('musicPlayer');
+  if (musicPlayer && _isMusicPausedByHidden) {
+    _isMusicPausedByHidden = false;
+    musicPlayer.play().catch(function (err) {
+      console.log('Music resume failed:', err);
+    });
+  }
+});
+window.addEventListener('pagehide', pauseMusicOnLeave);
+
 const _states = {
   notLoaded: -1,
   loading: 0,
